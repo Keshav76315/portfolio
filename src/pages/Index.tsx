@@ -26,7 +26,7 @@ const Index = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
         {/* Header */}
-        <header className="flex items-center justify-between mb-14 animate-fade-in">
+        <header className="flex items-center justify-between mb-20 animate-fade-in">
           <div>
             <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight">
               Keshav Ghai
@@ -34,14 +34,21 @@ const Index = () => {
             <p className="mt-2 text-lg text-secondary-foreground">
               Computer Science (AI/ML) Student · Frontend & Intelligent Systems
             </p>
+            <a
+              href="/resume.pdf"
+              download
+              className="btn-primary mt-4 inline-flex"
+            >
+              Download Resume
+            </a>
           </div>
           <Navigation />
         </header>
 
         {/* Main Grid */}
-        <main className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+        <main className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           {/* Left Column - About & Skills */}
-          <section className="lg:col-span-5 space-y-8">
+          <section className="lg:col-span-5 space-y-12">
             {/* About */}
             <div id="about" className="glass-card p-8 animate-fade-in" style={{ animationDelay: "0.1s" }}>
               <h2 className="section-title mb-5">About</h2>
@@ -94,13 +101,13 @@ const Index = () => {
           </section>
 
           {/* Right Column - Projects */}
-          <section id="projects" className="lg:col-span-7 space-y-6">
+          <section id="projects" className="lg:col-span-7 space-y-10">
             <div className="flex items-center justify-between mb-2 animate-fade-in" style={{ animationDelay: "0.15s" }}>
               <h2 className="section-title">Projects</h2>
               <p className="text-sm text-muted-foreground">A selection — more to come</p>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-8">
               <div className="animate-fade-in" style={{ animationDelay: "0.25s" }}>
                 <ProjectCard
                   title="MedSafe"
@@ -109,7 +116,7 @@ const Index = () => {
                   featured
                   description="MedSafe is an AI-powered medication safety and verification platform designed to combat counterfeit medicines and prevent dangerous drug interactions. It enables patients, pharmacists, and healthcare providers to verify medication authenticity, analyze interaction risks, and access real-time safety intelligence."
                   tags={["AI", "OCR", "Drug Databases", "Web Platform", "Healthcare"]}
-                  liveUrl="#"
+                  liveUrl="https://med-safe-1.lovable.app"
                 />
               </div>
 
@@ -134,7 +141,7 @@ const Index = () => {
         </main>
 
         {/* Contact Section */}
-        <section id="contact" className="mt-14 animate-fade-in" style={{ animationDelay: "0.5s" }}>
+        <section id="contact" className="mt-20 animate-fade-in" style={{ animationDelay: "0.5s" }}>
           <div className="glass-card p-8">
             <h2 className="section-title mb-2">Get in Touch</h2>
             <p className="text-secondary-foreground mb-6">
@@ -185,7 +192,7 @@ const Index = () => {
         </section>
 
         {/* Footer */}
-        <footer className="mt-10 text-center text-muted-foreground text-sm">
+        <footer className="mt-16 text-center text-muted-foreground text-sm">
           © {new Date().getFullYear()} Keshav Ghai — Built with ❤️
         </footer>
       </div>
