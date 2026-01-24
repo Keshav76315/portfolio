@@ -135,6 +135,14 @@ const Index = () => {
                 featured
                 description="MedSafe is an AI-powered medication safety and verification platform designed to combat counterfeit medicines and prevent dangerous drug interactions. It enables patients, pharmacists, and healthcare providers to verify medication authenticity, analyze interaction risks, and access real-time safety intelligence."
                 tags={["AI", "OCR", "Drug Databases", "Web Platform", "Healthcare"]}
+                techStack={[
+                  "Frontend: React 18, TypeScript, TailwindCSS",
+                  "UI: shadcn/ui, Recharts",
+                  "Backend: PostgreSQL with RLS, Edge Functions",
+                  "AI: Google Gemini 2.0 Flash",
+                  "OCR: Tesseract.js",
+                  "Auth: Email, Google OAuth, Phone OTP",
+                ]}
                 liveUrl="https://med-safe-1.lovable.app"
               />
 
