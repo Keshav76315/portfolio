@@ -100,11 +100,6 @@ const ProjectCard = ({
           </div>
         </div>
 
-        <div className="lg:w-2/5 flex items-center">
-          <div className="project-visual animate-float">
-            <span className="mono text-xs">Preview</span>
-          </div>
-        </div>
       </div>
     </article>
   );
