@@ -205,7 +205,7 @@ const Index = () => {
 
         {/* Footer */}
         <footer className="mt-20 text-center text-muted-foreground text-sm">
-          © {new Date().getFullYear()} Keshav Ghai — Built with ❤️
+          © {new Date().getFullYear()} Keshav Ghai
         </footer>
       </div>
     </div>
