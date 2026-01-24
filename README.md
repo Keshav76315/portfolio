@@ -35,7 +35,3 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
-
-## Deployment
-
-You can deploy this project using Vercel, Netlify, or your preferred hosting provider.
