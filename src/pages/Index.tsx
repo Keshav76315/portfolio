@@ -99,11 +99,12 @@ const Index = () => {
               />
 
               <ProjectCard
-                title="LiveGPT"
-                status="In Development"
-                statusType="development"
-                description="LiveGPT is a productivity assistant and HUD that tracks active apps, surfaces context-aware nudges, and integrates with a conversational backend to give quick insights. Intended as a lightweight overlay to boost focus and automation."
+                title="Guidon's Eye"
+                status="Prototype Ready"
+                statusType="active"
+                description="Guidon's Eye is a productivity assistant and HUD that tracks active apps, surfaces context-aware nudges, and integrates with a conversational backend to give quick insights. Intended as a lightweight overlay to boost focus and automation."
                 tags={["Desktop HUD", "Productivity", "AI Assistant", "Automation"]}
+                githubUrl="https://github.com/Keshav76315/guidons-eye"
               />
             </div>
           </section>
