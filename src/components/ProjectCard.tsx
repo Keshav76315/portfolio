@@ -3,11 +3,13 @@ import { ExternalLink, Github, Sparkles } from "lucide-react";
 interface ProjectCardProps {
   title: string;
   status: string;
-  statusType?: "active" | "development" | "default";
+  statusType?: "active" | "development" | "complete" | "default";
   description: string;
   tags: string[];
+  techStack?: string[];
   liveUrl?: string;
   githubUrl?: string;
+  demoPlaceholder?: boolean;
   featured?: boolean;
 }
 
@@ -17,13 +19,16 @@ const ProjectCard = ({
   statusType = "default",
   description,
   tags,
+  techStack,
   liveUrl,
   githubUrl,
+  demoPlaceholder = false,
   featured = false,
 }: ProjectCardProps) => {
   const statusClasses = {
     active: "status-badge-active",
     development: "status-badge bg-primary/20 text-primary",
+    complete: "status-badge bg-green-500/20 text-green-400",
     default: "status-badge",
   };
 
@@ -49,7 +54,7 @@ const ProjectCard = ({
             {description}
           </p>
 
-          <div className="flex flex-wrap gap-2 mb-6">
+          <div className="flex flex-wrap gap-2 mb-4">
             {tags.map((tag, idx) => (
               <span key={idx} className="skill-tag text-xs">
                 {tag}
@@ -57,7 +62,23 @@ const ProjectCard = ({
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
+          {techStack && techStack.length > 0 && (
+            <div className="mb-6 p-4 rounded-lg bg-muted/30 border border-border/50">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                Technology Stack
+              </p>
+              <ul className="text-sm text-secondary-foreground space-y-1">
+                {techStack.map((tech, idx) => (
+                  <li key={idx} className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-accent" />
+                    {tech}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div className="flex items-center gap-3 flex-wrap">
             {liveUrl && (
               <a href={liveUrl} target="_blank" rel="noreferrer" className="btn-primary">
                 <ExternalLink className="w-4 h-4" />
@@ -67,8 +88,14 @@ const ProjectCard = ({
             {githubUrl && (
               <a href={githubUrl} target="_blank" rel="noreferrer" className="btn-ghost">
                 <Github className="w-4 h-4" />
-                Source
+                View Source Code
               </a>
+            )}
+            {demoPlaceholder && (
+              <span className="btn-ghost opacity-60 cursor-not-allowed">
+                <ExternalLink className="w-4 h-4" />
+                Demo Video (Coming Soon)
+              </span>
             )}
           </div>
         </div>
