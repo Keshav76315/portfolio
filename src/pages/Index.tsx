@@ -6,6 +6,7 @@ import ProjectCard from "@/components/ProjectCard";
 const frontendSkills = [
   "HTML5 / CSS3",
   "JavaScript",
+  "TypeScript",
   "React",
   "Tailwind CSS",
   "Bootstrap",
@@ -186,7 +187,7 @@ const Index = () => {
           <section id="skills" className="w-full animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <div className="glass-card p-8 lg:p-10">
               <h2 className="section-title mb-6">Skills & Tech</h2>
-              
+
               <div className="space-y-6">
                 <div>
                   <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Frontend</h3>
