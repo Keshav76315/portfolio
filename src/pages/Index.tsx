@@ -167,6 +167,23 @@ const Index = () => {
               />
 
               <ProjectCard
+                title="CodeChicks"
+                status="Live"
+                statusType="active"
+                description="A full-stack developer productivity platform centered on real-time collaboration and community engagement. Features a polling-powered global chat system for seamless developer communication, a persistent floating timer widget for focus sessions, personalized dashboards with analytics, and multi-provider OAuth (Google & GitHub). Styled with a modern Frost/Cyber aesthetic using advanced glassmorphism effects."
+                tags={["Real-Time Chat", "Polling", "OAuth", "Community Platform", "Glassmorphism"]}
+                techStack={[
+                  "Backend: Python, FastAPI, Beanie (MongoDB ODM)",
+                  "Real-Time: Polling",
+                  "Auth: Authlib, Python-Jose (JWT), Passlib",
+                  "Frontend: HTML5, CSS3 (Vanilla), Vanilla JavaScript",
+                  "Database: MongoDB Atlas (Motor/Beanie)",
+                  "Deployment: Vercel (Serverless), Netlify",
+                ]}
+                liveUrl="https://codechicks.vercel.app"
+              />
+
+              <ProjectCard
                 title="Notes API"
                 status="Complete"
                 statusType="complete"
