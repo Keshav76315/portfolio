@@ -2,6 +2,7 @@ import { Mail, Phone, Github, Linkedin, Download, CheckCircle } from "lucide-rea
 import ParticleBackground from "@/components/ParticleBackground";
 import Navigation from "@/components/Navigation";
 import ProjectCard from "@/components/ProjectCard";
+import FreelanceCard from "@/components/FreelanceCard";
 
 const frontendSkills = [
   "HTML5 / CSS3",
@@ -196,6 +197,44 @@ const Index = () => {
                   "HTTP Requests: Axios/Fetch",
                 ]}
                 githubUrl="https://github.com/Keshav76315/notes-api"
+              />
+            </div>
+          </section>
+
+          {/* Freelance Section */}
+          <section id="freelance" className="w-full animate-fade-in" style={{ animationDelay: "0.25s" }}>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="section-title">Freelance Work</h2>
+              <p className="text-sm text-muted-foreground">Client projects & collaborations</p>
+            </div>
+
+            <div className="space-y-8">
+              <FreelanceCard
+                clientName="Green LeafX"
+                projectName="Sustainability Education Platform"
+                overview="A comprehensive educational platform dedicated to promoting sustainability and eco-conscious living. Built as a full-stack freelance web application serving as a central hub for environmental education, aggregating content from various sources to provide a seamless learning experience with automated video feeds, structured course modules, and community notes."
+                features={[
+                  "Automated Content Aggregation – Integrated YouTube Data API v3 to dynamically fetch, filter, and display educational videos with custom logic for title cleaning and ISO 8601 duration parsing",
+                  "Custom Admin Dashboard – Secure, role-based admin panel for managing courses, uploading notes, and viewing real-time platform analytics",
+                  "Course Management System – Database-backed architecture supporting multi-level courses (Beginner to Advanced) with rich media and enrollment tracking",
+                  "Responsive 'Eco' Design – Custom sustainability-themed UI using modern CSS3 (Glassmorphism, CSS Grid) fully responsive across devices",
+                  "Robust Production Backend – Migrated from local to production-ready Flask on PythonAnywhere with SQLite persistence",
+                ]}
+                technologies={[
+                  { category: "Backend", items: ["Python", "Flask", "Jinja2"] },
+                  { category: "Database", items: ["SQLite"] },
+                  { category: "Frontend", items: ["HTML5", "CSS3", "JavaScript"] },
+                  { category: "APIs", items: ["YouTube Data API v3"] },
+                  { category: "Deployment", items: ["PythonAnywhere"] },
+                ]}
+                responsibilities={[
+                  "End-to-end Full Stack Development",
+                  "Migrating codebase from local to cloud production",
+                  "Optimizing API usage within quota limits",
+                  "Designing UI/UX aligned with eco-friendly brand identity",
+                ]}
+                liveUrl="https://greenleafx.pythonanywhere.com"
+                accentColor="green"
               />
             </div>
           </section>
