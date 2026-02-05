@@ -145,7 +145,7 @@ const Index = () => {
                   "OCR: Tesseract.js",
                   "Auth: Email, Google OAuth, Phone OTP",
                 ]}
-                liveUrl="#"
+                liveUrl="https://med-safe-1.lovable.app"
               />
 
               <ProjectCard
