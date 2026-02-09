@@ -1,8 +1,113 @@
-import { Mail, Phone, Github, Linkedin, Download, CheckCircle } from "lucide-react";
+import { useState } from "react";
+import { Mail, Phone, Github, Linkedin, Download, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
 import ParticleBackground from "@/components/ParticleBackground";
 import Navigation from "@/components/Navigation";
 import ProjectCard from "@/components/ProjectCard";
 import FreelanceCard from "@/components/FreelanceCard";
+
+interface ProjectData {
+  title: string;
+  status: string;
+  statusType: "active" | "development" | "complete" | "default";
+  description: string;
+  tags: string[];
+  techStack: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+  demoPlaceholder?: boolean;
+  featured?: boolean;
+  priority: number; // Lower number = higher priority
+}
+
+const projects: ProjectData[] = [
+  {
+    title: "MedSafe",
+    status: "Prototype Ready",
+    statusType: "active",
+    featured: true,
+    priority: 1,
+    description: "MedSafe is an AI-powered medication safety and verification platform designed to combat counterfeit medicines and prevent dangerous drug interactions. It enables patients, pharmacists, and healthcare providers to verify medication authenticity, analyze interaction risks, and access real-time safety intelligence.",
+    tags: ["AI", "OCR", "Drug Databases", "Web Platform", "Healthcare"],
+    techStack: [
+      "Frontend: React 18, TypeScript, TailwindCSS",
+      "UI: shadcn/ui, Recharts",
+      "Backend: PostgreSQL with RLS, Edge Functions",
+      "AI: Google Gemini 2.0 Flash",
+      "OCR: Tesseract.js",
+      "Auth: Email, Google OAuth, Phone OTP",
+    ],
+    liveUrl: "https://med-safe-1.lovable.app",
+  },
+  {
+    title: "Guidon's Eye",
+    status: "Prototype Ready",
+    statusType: "active",
+    priority: 2,
+    description: "Privacy-first productivity assistant that tracks active applications, provides context-aware nudges, and integrates with a conversational AI backend to boost focus and automation. Built as a lightweight desktop overlay for developers and knowledge workers seeking distraction-free productivity.",
+    tags: ["Desktop HUD", "Productivity", "AI Assistant", "Automation", "Privacy-Focused"],
+    techStack: [
+      "Runtime: Electron (Chromium + Node.js)",
+      "Frontend: Vanilla HTML/CSS/JavaScript",
+      "Backend: Node.js (Main Process)",
+      "Database: MongoDB (Local Instance)",
+      "AI APIs: Google Gemini, Perplexity Sonar",
+      "HTTP Client: Axios with Circuit Breaker",
+      "Logging: Winston (JSON format)",
+    ],
+    githubUrl: "https://github.com/Keshav76315/guidons-eye",
+    demoPlaceholder: true,
+  },
+  {
+    title: "CodeChicks",
+    status: "Live",
+    statusType: "active",
+    priority: 3,
+    description: "A full-stack developer productivity platform centered on real-time collaboration and community engagement. Features a polling-powered global chat system for seamless developer communication, a persistent floating timer widget for focus sessions, personalized dashboards with analytics, and multi-provider OAuth (Google & GitHub). Styled with a modern Frost/Cyber aesthetic using advanced glassmorphism effects.",
+    tags: ["Real-Time Chat", "Polling", "OAuth", "Community Platform", "Glassmorphism"],
+    techStack: [
+      "Backend: Python, FastAPI, Beanie (MongoDB ODM)",
+      "Real-Time: Polling",
+      "Auth: Authlib, Python-Jose (JWT), Passlib",
+      "Frontend: HTML5, CSS3 (Vanilla), Vanilla JavaScript",
+      "Database: MongoDB Atlas (Motor/Beanie)",
+      "Deployment: Vercel (Serverless), Netlify",
+    ],
+    liveUrl: "https://codechicks.vercel.app",
+  },
+  {
+    title: "TensorFlow Multi-Model AI Suite",
+    status: "Active Development",
+    statusType: "development",
+    featured: true,
+    priority: 4,
+    description: "A comprehensive collection of production-ready machine learning models built with TensorFlow/Keras. Features 5 distinct AI models: Language Classifier (English/Hindi/Punjabi detection using BiLSTM), Sentiment Analysis (positive/neutral/negative classification), Depression Predictor (student mental health analysis using tabular data), Mask Detector (CNN-based face mask detection), and Brain Tumor Detection (multi-class MRI classification for glioma, meningioma, pituitary tumors).",
+    tags: ["TensorFlow", "Keras", "CNN", "NLP", "BiLSTM", "Computer Vision", "Healthcare AI"],
+    techStack: [
+      "Framework: TensorFlow 2.x, Keras",
+      "NLP: Character/Word-level Tokenization, BiLSTM",
+      "Vision: CNN with Conv2D, MaxPooling, OpenCV",
+      "Data: LabelEncoder, StandardScaler, Pandas",
+      "Models: .keras, .h5 formats",
+      "Utilities: Confusion Matrix, model_tester.py",
+    ],
+    githubUrl: "https://github.com/Keshav76315/ML-models",
+  },
+  {
+    title: "Notes API",
+    status: "Complete",
+    statusType: "complete",
+    priority: 5,
+    description: "RESTful Notes API built with Node.js and Express. Provides endpoints for creating, reading, updating, and deleting notes with MongoDB persistence. Demonstrates backend API development best practices including proper error handling, validation, and database integration.",
+    tags: ["REST API", "Backend", "Node.js", "MongoDB", "Express.js"],
+    techStack: [
+      "Runtime: Node.js",
+      "Framework: Express.js",
+      "Database: MongoDB",
+      "HTTP Requests: Axios/Fetch",
+    ],
+    githubUrl: "https://github.com/Keshav76315/notes-api",
+  },
+];
 
 const frontendSkills = [
   "HTML5 / CSS3",
@@ -43,6 +148,13 @@ const availableForServices = [
 ];
 
 const Index = () => {
+  const [showAllProjects, setShowAllProjects] = useState(false);
+  
+  // Sort projects by priority and slice based on state
+  const sortedProjects = [...projects].sort((a, b) => a.priority - b.priority);
+  const visibleProjects = showAllProjects ? sortedProjects : sortedProjects.slice(0, 4);
+  const hiddenProjectsCount = sortedProjects.length - 4;
+  
   return (
     <div className="min-h-screen relative">
       <ParticleBackground />
@@ -130,75 +242,44 @@ const Index = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <ProjectCard
-                title="MedSafe"
-                status="Prototype Ready"
-                statusType="active"
-                featured
-                description="MedSafe is an AI-powered medication safety and verification platform designed to combat counterfeit medicines and prevent dangerous drug interactions. It enables patients, pharmacists, and healthcare providers to verify medication authenticity, analyze interaction risks, and access real-time safety intelligence."
-                tags={["AI", "OCR", "Drug Databases", "Web Platform", "Healthcare"]}
-                techStack={[
-                  "Frontend: React 18, TypeScript, TailwindCSS",
-                  "UI: shadcn/ui, Recharts",
-                  "Backend: PostgreSQL with RLS, Edge Functions",
-                  "AI: Google Gemini 2.0 Flash",
-                  "OCR: Tesseract.js",
-                  "Auth: Email, Google OAuth, Phone OTP",
-                ]}
-                liveUrl="https://med-safe-1.lovable.app"
-              />
-
-              <ProjectCard
-                title="Guidon's Eye"
-                status="Prototype Ready"
-                statusType="active"
-                description="Privacy-first productivity assistant that tracks active applications, provides context-aware nudges, and integrates with a conversational AI backend to boost focus and automation. Built as a lightweight desktop overlay for developers and knowledge workers seeking distraction-free productivity."
-                tags={["Desktop HUD", "Productivity", "AI Assistant", "Automation", "Privacy-Focused"]}
-                techStack={[
-                  "Runtime: Electron (Chromium + Node.js)",
-                  "Frontend: Vanilla HTML/CSS/JavaScript",
-                  "Backend: Node.js (Main Process)",
-                  "Database: MongoDB (Local Instance)",
-                  "AI APIs: Google Gemini, Perplexity Sonar",
-                  "HTTP Client: Axios with Circuit Breaker",
-                  "Logging: Winston (JSON format)",
-                ]}
-                githubUrl="https://github.com/Keshav76315/guidons-eye"
-                demoPlaceholder
-              />
-
-              <ProjectCard
-                title="CodeChicks"
-                status="Live"
-                statusType="active"
-                description="A full-stack developer productivity platform centered on real-time collaboration and community engagement. Features a polling-powered global chat system for seamless developer communication, a persistent floating timer widget for focus sessions, personalized dashboards with analytics, and multi-provider OAuth (Google & GitHub). Styled with a modern Frost/Cyber aesthetic using advanced glassmorphism effects."
-                tags={["Real-Time Chat", "Polling", "OAuth", "Community Platform", "Glassmorphism"]}
-                techStack={[
-                  "Backend: Python, FastAPI, Beanie (MongoDB ODM)",
-                  "Real-Time: Polling",
-                  "Auth: Authlib, Python-Jose (JWT), Passlib",
-                  "Frontend: HTML5, CSS3 (Vanilla), Vanilla JavaScript",
-                  "Database: MongoDB Atlas (Motor/Beanie)",
-                  "Deployment: Vercel (Serverless), Netlify",
-                ]}
-                liveUrl="https://codechicks.vercel.app"
-              />
-
-              <ProjectCard
-                title="Notes API"
-                status="Complete"
-                statusType="complete"
-                description="RESTful Notes API built with Node.js and Express. Provides endpoints for creating, reading, updating, and deleting notes with MongoDB persistence. Demonstrates backend API development best practices including proper error handling, validation, and database integration."
-                tags={["REST API", "Backend", "Node.js", "MongoDB", "Express.js"]}
-                techStack={[
-                  "Runtime: Node.js",
-                  "Framework: Express.js",
-                  "Database: MongoDB",
-                  "HTTP Requests: Axios/Fetch",
-                ]}
-                githubUrl="https://github.com/Keshav76315/notes-api"
-              />
+              {visibleProjects.map((project) => (
+                <ProjectCard
+                  key={project.title}
+                  title={project.title}
+                  status={project.status}
+                  statusType={project.statusType}
+                  featured={project.featured}
+                  description={project.description}
+                  tags={project.tags}
+                  techStack={project.techStack}
+                  liveUrl={project.liveUrl}
+                  githubUrl={project.githubUrl}
+                  demoPlaceholder={project.demoPlaceholder}
+                />
+              ))}
             </div>
+
+            {/* See More / Show Less Button */}
+            {hiddenProjectsCount > 0 && (
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={() => setShowAllProjects(!showAllProjects)}
+                  className="btn-ghost group flex items-center gap-2 px-6 py-3 text-base font-medium transition-all duration-300 hover:bg-accent/10"
+                >
+                  {showAllProjects ? (
+                    <>
+                      <ChevronUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />
+                      Show Less
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="w-5 h-5 transition-transform group-hover:translate-y-0.5" />
+                      See {hiddenProjectsCount} More Project{hiddenProjectsCount > 1 ? 's' : ''}
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </section>
 
           {/* Freelance Section */}
