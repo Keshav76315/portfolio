@@ -3,7 +3,10 @@ import { Mail, Phone, Github, Linkedin, Download, CheckCircle, ChevronDown, Chev
 import ParticleBackground from "@/components/ParticleBackground";
 import Navigation from "@/components/Navigation";
 import ProjectCard from "@/components/ProjectCard";
+import HorizontalScrollCarousel from "@/components/HorizontalScrollCarousel";
 import FreelanceCard from "@/components/FreelanceCard";
+import { motion } from "framer-motion";
+import { fadeUp, heroText, staggerContainer, scaleUp, reveal } from "@/lib/animations";
 
 interface ProjectData {
   title: string;
@@ -80,15 +83,14 @@ const projects: ProjectData[] = [
     statusType: "development",
     featured: true,
     priority: 4,
-    description: "A comprehensive collection of production-ready machine learning models built with TensorFlow/Keras. Features 5 distinct AI models: Language Classifier (English/Hindi/Punjabi detection using BiLSTM), Sentiment Analysis (positive/neutral/negative classification), Depression Predictor (student mental health analysis using tabular data), Mask Detector (CNN-based face mask detection), and Brain Tumor Detection (multi-class MRI classification for glioma, meningioma, pituitary tumors).",
-    tags: ["TensorFlow", "Keras", "CNN", "NLP", "BiLSTM", "Computer Vision", "Healthcare AI"],
+    description: "A continuously expanding library of production-ready machine learning models spanning Computer Vision, Natural Language Processing (NLP), and Predictive Analytics. Designed as a modular experimentation suite, this repository features a diverse range of implementations—from foundational CNNs and BiLSTMs to advanced Unsupervised Learning algorithms. It serves as a practical showcase of AI solutions for real-world challenges in healthcare, content moderation, and automated pattern recognition.",
+    tags: ["TensorFlow", "Deep Learning", "Computer Vision", "NLP", "Unsupervised Learning", "AI Research"],
     techStack: [
-      "Framework: TensorFlow 2.x, Keras",
-      "NLP: Character/Word-level Tokenization, BiLSTM",
-      "Vision: CNN with Conv2D, MaxPooling, OpenCV",
-      "Data: LabelEncoder, StandardScaler, Pandas",
-      "Models: .keras, .h5 formats",
-      "Utilities: Confusion Matrix, model_tester.py",
+      "Core: TensorFlow 2.x, Keras, Scikit-learn",
+      "Architectures: CNN, BiLSTM, RNN, Autoencoders",
+      "Techniques: Transfer Learning, Tokenization, Clustering (PCA/t-SNE)",
+      "Processing: Pandas, OpenCV, NumPy",
+      "Deployment: Model Serialization (.h5/.keras)",
     ],
     githubUrl: "https://github.com/Keshav76315/ML-models",
   },
@@ -110,33 +112,39 @@ const projects: ProjectData[] = [
 ];
 
 const frontendSkills = [
-  "HTML5 / CSS3",
-  "JavaScript",
+  "React / Next.js",
   "TypeScript",
-  "React",
   "Tailwind CSS",
-  "Bootstrap",
+  "Framer Motion",
+  "Shadcn UI",
+  "HTML5 / CSS3",
 ];
 
 const backendSkills = [
-  "Node.js",
-  "Express.js",
+  "Node.js (Express)",
+  "Python (FastAPI / Flask)",
   "MongoDB",
-  "REST APIs",
-  "JWT Authentication",
+  "PostgreSQL",
+  "REST / GraphQL APIs",
+  "Auth (JWT / OAuth)",
 ];
 
 const toolsSkills = [
-  "Python",
-  "C++",
-  "SQL",
   "Git & GitHub",
+  "Docker",
+  "Postman",
+  "Vercel / Netlify",
+  "Linux / WSL",
   "Google Colab",
 ];
 
 const aimlSkills = [
-  "Data Structures",
-  "AI / Machine Learning",
+  "TensorFlow / Keras",
+  "Scikit-learn",
+  "OpenCV",
+  "NLP (BiLSTM / Transformers)",
+  "Generative AI (LLMs)",
+  "Data Analysis (Pandas/NumPy)",
 ];
 
 const availableForServices = [
@@ -148,67 +156,102 @@ const availableForServices = [
 ];
 
 const Index = () => {
-  const [showAllProjects, setShowAllProjects] = useState(false);
-  
-  // Sort projects by priority and slice based on state
+  // Sort projects by priority
   const sortedProjects = [...projects].sort((a, b) => a.priority - b.priority);
-  const visibleProjects = showAllProjects ? sortedProjects : sortedProjects.slice(0, 4);
-  const hiddenProjectsCount = sortedProjects.length - 4;
   
   return (
     <div className="min-h-screen relative">
       <ParticleBackground />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
-        {/* Header */}
-        <header className="flex items-center justify-between mb-20 animate-fade-in">
-          <div>
-            <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight">
-              Keshav Ghai
-            </h1>
-            <p className="mt-2 text-lg text-secondary-foreground">
-              MERN Developer & Aspiring AI Engineer | Available for Freelance Projects
-            </p>
+        {/* Header / Hero */}
+        <motion.header 
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+          className="flex flex-col justify-center min-h-[60vh] mb-20 mt-10" // Increased height for impact
+        >
+           <div className="flex justify-between items-start mb-20">
+              <motion.div variants={scaleUp}>
+                 {/* Small logo or status could go here */}
+                 <span className="text-sm font-mono tracking-widest uppercase text-muted-foreground">Portfolio</span>
+              </motion.div>
+              <motion.div variants={scaleUp}>
+                <Navigation />
+              </motion.div>
+           </div>
+
+          <div className="flex flex-col gap-0 select-none">
+            {/* First Name */}
+            <div className="overflow-hidden">
+               <motion.h1 
+                  variants={reveal} 
+                  className="text-[12vw] leading-[0.9] font-black tracking-tighter uppercase text-foreground/90 mix-blend-difference"
+               >
+                 Keshav
+               </motion.h1>
+            </div>
+            
+            {/* Last Name & Subtitle */}
+             <div className="flex flex-col md:flex-row md:items-start justify-between gap-8">
+                <div className="overflow-hidden">
+                  <motion.h1 
+                      variants={reveal} 
+                      className="text-[12vw] leading-[0.9] font-black tracking-tighter uppercase text-foreground/90 mix-blend-difference"
+                  >
+                    Ghai
+                  </motion.h1>
+                </div>
+                
+                <motion.div variants={fadeUp} className="md:max-w-md mt-4 md:mt-10 mx-1">
+                   <p className="text-xl md:text-2xl font-light text-secondary-foreground leading-relaxed">
+                      Full Stack Developer & AI Engineer. <br/>
+                      <span className="opacity-60">Crafting digital experiences that merge logic with design.</span>
+                   </p>
+                </motion.div>
+             </div>
           </div>
-          <Navigation />
-        </header>
+        </motion.header>
 
         {/* Full-width stacked sections */}
         <main className="space-y-16">
           {/* About Section */}
-          <section id="about" className="w-full animate-fade-in" style={{ animationDelay: "0.1s" }}>
+          <motion.section 
+            id="about" 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeUp}
+            className="w-full"
+          >
             <div className="glass-card p-8 lg:p-10">
               <h2 className="section-title mb-6">About</h2>
               <p className="text-secondary-foreground leading-relaxed text-lg max-w-4xl">
-                B.Tech Computer Science Engineering (AI/ML Specialization) student at
-                NxtWave Institute of Advanced Technologies with a strong foundation in
-                frontend web development, data structures, and system design. Experienced
-                in building responsive web applications using modern JavaScript frameworks,
-                with a growing focus on AI/ML and automation.
+                I am a Full Stack Developer and AI Engineer passionate about building scalable, high-performance web applications. With deep expertise in the MERN stack and Machine Learning, I transform complex requirements into elegant, production-ready solutions. My work bridges the gap between robust engineering and intuitive design, helping businesses and startups launch products that matter.
               </p>
 
               <div className="mt-10">
                 <h3 className="section-subtitle mb-5">Current Focus</h3>
-                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-secondary-foreground">
-                  <li className="flex items-center gap-3">
+                <ul className="flex flex-wrap gap-4 text-secondary-foreground">
+                  <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
                     <span className="w-2 h-2 rounded-full bg-accent" />
-                    Frontend web development (React, modern CSS)
+                    Delivering high-quality freelance projects
                   </li>
-                  <li className="flex items-center gap-3">
+                  <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
                     <span className="w-2 h-2 rounded-full bg-accent" />
-                    Data Structures & Algorithms
+                    Building SaaS products
                   </li>
-                  <li className="flex items-center gap-3">
+                  <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
                     <span className="w-2 h-2 rounded-full bg-accent" />
-                    System design fundamentals
+                    Integrating AI into web workflows
                   </li>
-                  <li className="flex items-center gap-3">
+                  <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
                     <span className="w-2 h-2 rounded-full bg-accent" />
-                    AI / Machine Learning exploration
+                    Advanced Data Structures & System Design
                   </li>
-                  <li className="flex items-center gap-3">
+                  <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
                     <span className="w-2 h-2 rounded-full bg-accent" />
-                    Leadership & technical community building
+                    Open Source Contribution
                   </li>
                 </ul>
               </div>
@@ -232,167 +275,153 @@ const Index = () => {
                 </p>
               </div>
             </div>
-          </section>
+          </motion.section>
 
-          {/* Projects Section */}
-          <section id="projects" className="w-full animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="section-title">Projects</h2>
-              <p className="text-sm text-muted-foreground">Real projects, real code</p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {visibleProjects.map((project) => (
-                <ProjectCard
-                  key={project.title}
-                  title={project.title}
-                  status={project.status}
-                  statusType={project.statusType}
-                  featured={project.featured}
-                  description={project.description}
-                  tags={project.tags}
-                  techStack={project.techStack}
-                  liveUrl={project.liveUrl}
-                  githubUrl={project.githubUrl}
-                  demoPlaceholder={project.demoPlaceholder}
-                />
-              ))}
-            </div>
-
-            {/* See More / Show Less Button */}
-            {hiddenProjectsCount > 0 && (
-              <div className="mt-8 flex justify-center">
-                <button
-                  onClick={() => setShowAllProjects(!showAllProjects)}
-                  className="btn-ghost group flex items-center gap-2 px-6 py-3 text-base font-medium transition-all duration-300 hover:bg-accent/10"
-                >
-                  {showAllProjects ? (
-                    <>
-                      <ChevronUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />
-                      Show Less
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown className="w-5 h-5 transition-transform group-hover:translate-y-0.5" />
-                      See {hiddenProjectsCount} More Project{hiddenProjectsCount > 1 ? 's' : ''}
-                    </>
-                  )}
-                </button>
-              </div>
-            )}
-          </section>
+          {/* Projects Section - Horizontal Scroll */}
+          <HorizontalScrollCarousel projects={sortedProjects} />
 
           {/* Freelance Section */}
-          <section id="freelance" className="w-full animate-fade-in" style={{ animationDelay: "0.25s" }}>
+          <motion.section 
+            id="freelance" 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeUp}
+            className="w-full"
+          >
             <div className="flex items-center justify-between mb-8">
               <h2 className="section-title">Freelance Work</h2>
               <p className="text-sm text-muted-foreground">Client projects & collaborations</p>
             </div>
 
             <div className="space-y-8">
-              <FreelanceCard
-                clientName="Green LeafX"
-                projectName="Sustainability Education Platform"
-                overview="A comprehensive educational platform dedicated to promoting sustainability and eco-conscious living. Built as a full-stack freelance web application serving as a central hub for environmental education, aggregating content from various sources to provide a seamless learning experience with automated video feeds, structured course modules, and community notes."
-                features={[
-                  "Automated Content Aggregation – Integrated YouTube Data API v3 to dynamically fetch, filter, and display educational videos with custom logic for title cleaning and ISO 8601 duration parsing",
-                  "Custom Admin Dashboard – Secure, role-based admin panel for managing courses, uploading notes, and viewing real-time platform analytics",
-                  "Course Management System – Database-backed architecture supporting multi-level courses (Beginner to Advanced) with rich media and enrollment tracking",
-                  "Responsive 'Eco' Design – Custom sustainability-themed UI using modern CSS3 (Glassmorphism, CSS Grid) fully responsive across devices",
-                  "Robust Production Backend – Migrated from local to production-ready Flask on PythonAnywhere with SQLite persistence",
-                ]}
-                technologies={[
-                  { category: "Backend", items: ["Python", "Flask", "Jinja2"] },
-                  { category: "Database", items: ["SQLite"] },
-                  { category: "Frontend", items: ["HTML5", "CSS3", "JavaScript"] },
-                  { category: "APIs", items: ["YouTube Data API v3"] },
-                  { category: "Deployment", items: ["PythonAnywhere"] },
-                ]}
-                responsibilities={[
-                  "End-to-end Full Stack Development",
-                  "Migrating codebase from local to cloud production",
-                  "Optimizing API usage within quota limits",
-                  "Designing UI/UX aligned with eco-friendly brand identity",
-                ]}
-                liveUrl="https://greenleafx.pythonanywhere.com"
-                accentColor="green"
-              />
+              <motion.div whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}>
+                <FreelanceCard
+                  clientName="Green LeafX"
+                  projectName="Sustainability Education Platform"
+                  overview="A comprehensive educational platform dedicated to promoting sustainability and eco-conscious living. Built as a full-stack freelance web application serving as a central hub for environmental education, aggregating content from various sources to provide a seamless learning experience with automated video feeds, structured course modules, and community notes."
+                  features={[
+                    "Automated Content Aggregation – Integrated YouTube Data API v3 to dynamically fetch, filter, and display educational videos with custom logic for title cleaning and ISO 8601 duration parsing",
+                    "Custom Admin Dashboard – Secure, role-based admin panel for managing courses, uploading notes, and viewing real-time platform analytics",
+                    "Course Management System – Database-backed architecture supporting multi-level courses (Beginner to Advanced) with rich media and enrollment tracking",
+                    "Responsive 'Eco' Design – Custom sustainability-themed UI using modern CSS3 (Glassmorphism, CSS Grid) fully responsive across devices",
+                    "Robust Production Backend – Migrated from local to production-ready Flask on PythonAnywhere with SQLite persistence",
+                  ]}
+                  technologies={[
+                    { category: "Backend", items: ["Python", "Flask", "Jinja2"] },
+                    { category: "Database", items: ["SQLite"] },
+                    { category: "Frontend", items: ["HTML5", "CSS3", "JavaScript"] },
+                    { category: "APIs", items: ["YouTube Data API v3"] },
+                    { category: "Deployment", items: ["PythonAnywhere"] },
+                  ]}
+                  responsibilities={[
+                    "End-to-end Full Stack Development",
+                    "Migrating codebase from local to cloud production",
+                    "Optimizing API usage within quota limits",
+                    "Designing UI/UX aligned with eco-friendly brand identity",
+                  ]}
+                  liveUrl="https://greenleafx.pythonanywhere.com"
+                  accentColor="green"
+                />
+              </motion.div>
             </div>
-          </section>
+          </motion.section>
 
           {/* Skills Section */}
-          <section id="skills" className="w-full animate-fade-in" style={{ animationDelay: "0.3s" }}>
+          <motion.section 
+            id="skills" 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="w-full"
+          >
             <div className="glass-card p-8 lg:p-10">
-              <h2 className="section-title mb-6">Skills & Tech</h2>
+              <motion.h2 variants={fadeUp} className="section-title mb-6">Skills & Tech</motion.h2>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Frontend</h3>
-                  <div className="flex flex-wrap gap-3">
+                  <motion.h3 variants={fadeUp} className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Frontend</motion.h3>
+                  <motion.div variants={staggerContainer} className="flex flex-wrap gap-3">
                     {frontendSkills.map((skill) => (
-                      <span key={skill} className="skill-tag text-base px-4 py-2">
+                      <motion.span key={skill} variants={scaleUp} whileHover={{ scale: 1.1 }} className="skill-tag text-base px-4 py-2">
                         {skill}
-                      </span>
+                      </motion.span>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Backend</h3>
-                  <div className="flex flex-wrap gap-3">
+                  <motion.h3 variants={fadeUp} className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Backend</motion.h3>
+                  <motion.div variants={staggerContainer} className="flex flex-wrap gap-3">
                     {backendSkills.map((skill) => (
-                      <span key={skill} className="skill-tag text-base px-4 py-2">
+                      <motion.span key={skill} variants={scaleUp} whileHover={{ scale: 1.1 }} className="skill-tag text-base px-4 py-2">
                         {skill}
-                      </span>
+                      </motion.span>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Tools & Languages</h3>
-                  <div className="flex flex-wrap gap-3">
+                  <motion.h3 variants={fadeUp} className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Tools & Languages</motion.h3>
+                  <motion.div variants={staggerContainer} className="flex flex-wrap gap-3">
                     {toolsSkills.map((skill) => (
-                      <span key={skill} className="skill-tag text-base px-4 py-2">
+                      <motion.span key={skill} variants={scaleUp} whileHover={{ scale: 1.1 }} className="skill-tag text-base px-4 py-2">
                         {skill}
-                      </span>
+                      </motion.span>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">AI / ML</h3>
-                  <div className="flex flex-wrap gap-3">
+                  <motion.h3 variants={fadeUp} className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">AI / ML</motion.h3>
+                  <motion.div variants={staggerContainer} className="flex flex-wrap gap-3">
                     {aimlSkills.map((skill) => (
-                      <span key={skill} className="skill-tag text-base px-4 py-2">
+                      <motion.span key={skill} variants={scaleUp} whileHover={{ scale: 1.1 }} className="skill-tag text-base px-4 py-2">
                         {skill}
-                      </span>
+                      </motion.span>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* Resume Download Section */}
-          <section className="w-full animate-fade-in" style={{ animationDelay: "0.4s" }}>
+          <motion.section 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeUp}
+            className="w-full"
+          >
             <div className="glass-card p-8 lg:p-10 text-center">
               <h2 className="section-title mb-4">Want to know more?</h2>
               <p className="text-secondary-foreground mb-6 max-w-2xl mx-auto">
                 Download my resume for a detailed overview of my education, experience, and skills.
               </p>
-              <a
+              <motion.a
                 href="/resume.pdf"
                 download
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className="btn-primary inline-flex text-lg px-8 py-3"
               >
                 <Download className="w-5 h-5" />
                 Download Resume
-              </a>
+              </motion.a>
             </div>
-          </section>
+          </motion.section>
 
           {/* Contact Section */}
-          <section id="contact" className="w-full animate-fade-in" style={{ animationDelay: "0.5s" }}>
+          <motion.section 
+            id="contact" 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeUp}
+            className="w-full"
+          >
             <div className="glass-card p-8 lg:p-10">
               <h2 className="section-title mb-4">Get in Touch</h2>
               <p className="text-secondary-foreground mb-8 text-lg">
@@ -400,39 +429,48 @@ const Index = () => {
               </p>
 
               <div className="flex flex-wrap items-center gap-4 mb-8">
-                <a
+                <motion.a
                   href="mailto:ghaikeshav55@gmail.com"
                   className="btn-primary"
+                  whileHover={{ scale: 1.05, x: 5 }}
                 >
                   <Mail className="w-4 h-4" />
                   ghaikeshav55@gmail.com
-                </a>
-                <a href="tel:+917657805107" className="btn-ghost">
+                </motion.a>
+                <motion.a 
+                  href="tel:+917657805107" 
+                  className="btn-ghost"
+                  whileHover={{ scale: 1.05, x: 5 }}
+                >
                   <Phone className="w-4 h-4" />
                   +91 76578 05107
-                </a>
+                </motion.a>
               </div>
 
               <div className="flex items-center gap-4">
-                <a
+                <motion.a
                   href="https://github.com/keshav76315"
                   target="_blank"
                   rel="noreferrer"
                   className="btn-ghost"
+                  whileHover={{ scale: 1.1, rotate: 10, color: "var(--accent)" }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <Github className="w-5 h-5" />
-                </a>
-                <a
+                </motion.a>
+                <motion.a
                   href="https://www.linkedin.com/in/keshav-ghai-b584b030a"
                   target="_blank"
                   rel="noreferrer"
                   className="btn-ghost"
+                  whileHover={{ scale: 1.1, rotate: -10, color: "#0077b5" }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <Linkedin className="w-5 h-5" />
-                </a>
+                </motion.a>
               </div>
             </div>
-          </section>
+          </motion.section>
         </main>
 
         {/* Footer */}
@@ -442,6 +480,5 @@ const Index = () => {
       </div>
     </div>
   );
-};
-
+}
 export default Index;

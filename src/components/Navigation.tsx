@@ -9,6 +9,8 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
+import Magnetic from "../components/Magnetic";
+
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -17,9 +19,11 @@ const Navigation = () => {
       {/* Desktop Nav */}
       <div className="hidden md:flex items-center gap-8">
         {navItems.map((item) => (
-          <a key={item.href} href={item.href} className="nav-link text-sm font-medium">
-            {item.label}
-          </a>
+          <Magnetic key={item.label}>
+             <a href={item.href} className="nav-link text-sm font-medium inline-block px-4 py-2">
+              {item.label}
+            </a>
+          </Magnetic>
         ))}
       </div>
 
