@@ -3,7 +3,6 @@ import { Mail, Phone, Github, Linkedin, Download, CheckCircle, ChevronDown, Chev
 import ParticleBackground from "@/components/ParticleBackground";
 import Navigation from "@/components/Navigation";
 import ProjectCard from "@/components/ProjectCard";
-import HorizontalScrollCarousel from "@/components/HorizontalScrollCarousel";
 import FreelanceCard from "@/components/FreelanceCard";
 import { motion } from "framer-motion";
 import { fadeUp, heroText, staggerContainer, scaleUp, reveal } from "@/lib/animations";
@@ -24,28 +23,11 @@ interface ProjectData {
 
 const projects: ProjectData[] = [
   {
-    title: "MedSafe",
+    title: "Guidon's Eye",
     status: "Prototype Ready",
     statusType: "active",
     featured: true,
     priority: 1,
-    description: "MedSafe is an AI-powered medication safety and verification platform designed to combat counterfeit medicines and prevent dangerous drug interactions. It enables patients, pharmacists, and healthcare providers to verify medication authenticity, analyze interaction risks, and access real-time safety intelligence.",
-    tags: ["AI", "OCR", "Drug Databases", "Web Platform", "Healthcare"],
-    techStack: [
-      "Frontend: React 18, TypeScript, TailwindCSS",
-      "UI: shadcn/ui, Recharts",
-      "Backend: PostgreSQL with RLS, Edge Functions",
-      "AI: Google Gemini 2.0 Flash",
-      "OCR: Tesseract.js",
-      "Auth: Email, Google OAuth, Phone OTP",
-    ],
-    liveUrl: "https://med-safe-1.lovable.app",
-  },
-  {
-    title: "Guidon's Eye",
-    status: "Prototype Ready",
-    statusType: "active",
-    priority: 2,
     description: "Privacy-first productivity assistant that tracks active applications, provides context-aware nudges, and integrates with a conversational AI backend to boost focus and automation. Built as a lightweight desktop overlay for developers and knowledge workers seeking distraction-free productivity.",
     tags: ["Desktop HUD", "Productivity", "AI Assistant", "Automation", "Privacy-Focused"],
     techStack: [
@@ -61,10 +43,61 @@ const projects: ProjectData[] = [
     demoPlaceholder: true,
   },
   {
+    title: "TensorFlow Multi-Model AI Suite",
+    status: "Active Development",
+    statusType: "development",
+    featured: true,
+    priority: 2,
+    description: "A continuously expanding library of production-ready machine learning models spanning Computer Vision, Natural Language Processing (NLP), and Predictive Analytics. Designed as a modular experimentation suite, this repository features a diverse range of implementations—from foundational CNNs and BiLSTMs to advanced Unsupervised Learning algorithms. It serves as a practical showcase of AI solutions for real-world challenges in healthcare, content moderation, and automated pattern recognition.",
+    tags: ["TensorFlow", "Deep Learning", "Computer Vision", "NLP", "Unsupervised Learning", "AI Research"],
+    techStack: [
+      "Core: TensorFlow 2.x, Keras, Scikit-learn",
+      "Architectures: CNN, BiLSTM, RNN, Autoencoders",
+      "Techniques: Transfer Learning, Tokenization, Clustering (PCA/t-SNE)",
+      "Processing: Pandas, OpenCV, NumPy",
+      "Deployment: Model Serialization (.h5/.keras)",
+    ],
+    githubUrl: "https://github.com/Keshav76315/ML-models",
+  },
+  {
+    title: "LawBuddy AI",
+    status: "Complete",
+    statusType: "complete",
+    featured: true,
+    priority: 3,
+    description: "An intelligent legal assistant platform powered by a custom, locally-hosted Large Language Model built via fine-tuning — no external API calls, no cloud dependencies. LawBuddy runs entirely on-device for maximum privacy and data sovereignty, providing real-time legal analysis, AI-assisted document drafting, and full case management through a modern web interface.",
+    tags: ["Local LLM", "Ollama", "Legal Tech", "AI Assistant", "Privacy-First", "NLP"],
+    techStack: [
+      "AI: Custom Ollama-hosted Model (LawBuddy:latest)",
+      "Backend: Node.js, Express.js",
+      "Database: Innovative JSON file-based DB (zero setup)",
+      "Frontend: HTML5, CSS3, JavaScript",
+      "Auth: Express Sessions",
+    ],
+    githubUrl: "https://github.com/Keshav76315/LawBuddy",
+  },
+  {
+    title: "MedSafe",
+    status: "Prototype Ready",
+    statusType: "active",
+    priority: 4,
+    description: "MedSafe is an AI-powered medication safety and verification platform designed to combat counterfeit medicines and prevent dangerous drug interactions. It enables patients, pharmacists, and healthcare providers to verify medication authenticity, analyze interaction risks, and access real-time safety intelligence.",
+    tags: ["AI", "OCR", "Drug Databases", "Web Platform", "Healthcare"],
+    techStack: [
+      "Frontend: React 18, TypeScript, TailwindCSS",
+      "UI: shadcn/ui, Recharts",
+      "Backend: PostgreSQL with RLS, Edge Functions",
+      "AI: Google Gemini 2.0 Flash",
+      "OCR: Tesseract.js",
+      "Auth: Email, Google OAuth, Phone OTP",
+    ],
+    liveUrl: "https://med-safe-1.lovable.app",
+  },
+  {
     title: "CodeChicks",
     status: "Live",
     statusType: "active",
-    priority: 3,
+    priority: 5,
     description: "A full-stack developer productivity platform centered on real-time collaboration and community engagement. Features a polling-powered global chat system for seamless developer communication, a persistent floating timer widget for focus sessions, personalized dashboards with analytics, and multi-provider OAuth (Google & GitHub). Styled with a modern Frost/Cyber aesthetic using advanced glassmorphism effects.",
     tags: ["Real-Time Chat", "Polling", "OAuth", "Community Platform", "Glassmorphism"],
     techStack: [
@@ -78,27 +111,10 @@ const projects: ProjectData[] = [
     liveUrl: "https://codechicks.vercel.app",
   },
   {
-    title: "TensorFlow Multi-Model AI Suite",
-    status: "Active Development",
-    statusType: "development",
-    featured: true,
-    priority: 4,
-    description: "A continuously expanding library of production-ready machine learning models spanning Computer Vision, Natural Language Processing (NLP), and Predictive Analytics. Designed as a modular experimentation suite, this repository features a diverse range of implementations—from foundational CNNs and BiLSTMs to advanced Unsupervised Learning algorithms. It serves as a practical showcase of AI solutions for real-world challenges in healthcare, content moderation, and automated pattern recognition.",
-    tags: ["TensorFlow", "Deep Learning", "Computer Vision", "NLP", "Unsupervised Learning", "AI Research"],
-    techStack: [
-      "Core: TensorFlow 2.x, Keras, Scikit-learn",
-      "Architectures: CNN, BiLSTM, RNN, Autoencoders",
-      "Techniques: Transfer Learning, Tokenization, Clustering (PCA/t-SNE)",
-      "Processing: Pandas, OpenCV, NumPy",
-      "Deployment: Model Serialization (.h5/.keras)",
-    ],
-    githubUrl: "https://github.com/Keshav76315/ML-models",
-  },
-  {
     title: "Notes API",
     status: "Complete",
     statusType: "complete",
-    priority: 5,
+    priority: 6,
     description: "RESTful Notes API built with Node.js and Express. Provides endpoints for creating, reading, updating, and deleting notes with MongoDB persistence. Demonstrates backend API development best practices including proper error handling, validation, and database integration.",
     tags: ["REST API", "Backend", "Node.js", "MongoDB", "Express.js"],
     techStack: [
@@ -277,8 +293,50 @@ const Index = () => {
             </div>
           </motion.section>
 
-          {/* Projects Section - Horizontal Scroll */}
-          <HorizontalScrollCarousel projects={sortedProjects} />
+          {/* Projects Section - Responsive Grid */}
+          <motion.section
+            id="projects"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="w-full"
+          >
+            <div className="flex items-end justify-between mb-10">
+              <div>
+                <motion.h2 variants={fadeUp} className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground/10 leading-none">
+                  Selected
+                </motion.h2>
+                <motion.h2 variants={fadeUp} className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-none">
+                  Works
+                </motion.h2>
+                <motion.div variants={fadeUp} className="w-24 h-2 bg-accent mt-6" />
+              </div>
+              <motion.span variants={fadeUp} className="text-sm text-muted-foreground mono hidden md:block">
+                {sortedProjects.length} Projects
+              </motion.span>
+            </div>
+
+            <motion.div
+              variants={staggerContainer}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            >
+              {sortedProjects.map((project, index) => (
+                <motion.div
+                  key={project.title}
+                  variants={fadeUp}
+                  className={project.featured ? "md:col-span-2" : ""}
+                >
+                  <div className="relative group">
+                    <span className="absolute -top-8 -left-2 text-7xl font-black text-foreground/5 pointer-events-none select-none z-0 hidden md:block">
+                      {(index + 1).toString().padStart(2, '0')}
+                    </span>
+                    <ProjectCard {...project} />
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.section>
 
           {/* Freelance Section */}
           <motion.section 
