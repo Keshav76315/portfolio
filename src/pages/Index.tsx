@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Mail, Phone, Github, Linkedin, Download, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Mail, Phone, Github, Linkedin, Download, CheckCircle, ChevronDown, ChevronUp, Award } from "lucide-react";
 import ParticleBackground from "@/components/ParticleBackground";
 import Navigation from "@/components/Navigation";
 import ProjectCard from "@/components/ProjectCard";
 import FreelanceCard from "@/components/FreelanceCard";
+import CertificationCard from "@/components/CertificationCard";
 import { motion } from "framer-motion";
 import { fadeUp, heroText, staggerContainer, scaleUp, reveal } from "@/lib/animations";
 
@@ -171,6 +172,17 @@ const availableForServices = [
   "UI/UX implementation & responsive design",
 ];
 
+const certifications = [
+  {
+    title: "IBM Data Science Professional Certificate",
+    issuer: "IBM via Coursera",
+    date: "February 2026",
+    description:
+      "A comprehensive 12-course professional certificate covering the entire data science lifecycle — from Python programming, SQL, and data analysis to machine learning, deep learning, and data visualization. Completed hands-on capstone projects involving real-world datasets, building predictive models with Scikit-learn and TensorFlow, and creating interactive dashboards with Plotly and Dash.",
+    imageUrl: "/Certificate.png",
+  },
+];
+
 const Index = () => {
   // Sort projects by priority
   const sortedProjects = [...projects].sort((a, b) => a.priority - b.priority);
@@ -305,10 +317,10 @@ const Index = () => {
             <div className="flex items-end justify-between mb-10">
               <div>
                 <motion.h2 variants={fadeUp} className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground/10 leading-none">
-                  Selected
+                  My
                 </motion.h2>
                 <motion.h2 variants={fadeUp} className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-none">
-                  Works
+                  Projects
                 </motion.h2>
                 <motion.div variants={fadeUp} className="w-24 h-2 bg-accent mt-6" />
               </div>
@@ -336,6 +348,37 @@ const Index = () => {
                 </motion.div>
               ))}
             </motion.div>
+          </motion.section>
+
+          {/* Certifications Section */}
+          <motion.section
+            id="certifications"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="w-full"
+          >
+            <div className="flex items-end justify-between mb-10">
+              <div>
+                <motion.h2 variants={fadeUp} className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground/10 leading-none">
+                  Certified
+                </motion.h2>
+                <motion.h2 variants={fadeUp} className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-none">
+                  Knowledge
+                </motion.h2>
+                <motion.div variants={fadeUp} className="w-24 h-2 bg-accent mt-6" />
+              </div>
+              <motion.span variants={fadeUp} className="text-sm text-muted-foreground mono hidden md:block">
+                {certifications.length} {certifications.length === 1 ? "Certificate" : "Certificates"}
+              </motion.span>
+            </div>
+
+            <div className="space-y-6">
+              {certifications.map((cert) => (
+                <CertificationCard key={cert.title} {...cert} />
+              ))}
+            </div>
           </motion.section>
 
           {/* Freelance Section */}
@@ -444,6 +487,7 @@ const Index = () => {
               </div>
             </div>
           </motion.section>
+
 
           {/* Resume Download Section */}
           <motion.section 
