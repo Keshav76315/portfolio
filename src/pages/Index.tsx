@@ -1,12 +1,28 @@
 import { useState } from "react";
-import { Mail, Phone, Github, Linkedin, Download, CheckCircle, ChevronDown, ChevronUp, Award } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  Github,
+  Linkedin,
+  Download,
+  CheckCircle,
+  ChevronDown,
+  ChevronUp,
+  Award,
+} from "lucide-react";
 import ParticleBackground from "@/components/ParticleBackground";
 import Navigation from "@/components/Navigation";
 import ProjectCard from "@/components/ProjectCard";
 import FreelanceCard from "@/components/FreelanceCard";
 import CertificationCard from "@/components/CertificationCard";
 import { motion } from "framer-motion";
-import { fadeUp, heroText, staggerContainer, scaleUp, reveal } from "@/lib/animations";
+import {
+  fadeUp,
+  heroText,
+  staggerContainer,
+  scaleUp,
+  reveal,
+} from "@/lib/animations";
 
 interface ProjectData {
   title: string;
@@ -29,8 +45,15 @@ const projects: ProjectData[] = [
     statusType: "active",
     featured: true,
     priority: 1,
-    description: "Privacy-first productivity assistant that tracks active applications, provides context-aware nudges, and integrates with a conversational AI backend to boost focus and automation. Built as a lightweight desktop overlay for developers and knowledge workers seeking distraction-free productivity.",
-    tags: ["Desktop HUD", "Productivity", "AI Assistant", "Automation", "Privacy-Focused"],
+    description:
+      "Privacy-first productivity assistant that tracks active applications, provides context-aware nudges, and integrates with a conversational AI backend to boost focus and automation. Built as a lightweight desktop overlay for developers and knowledge workers seeking distraction-free productivity.",
+    tags: [
+      "Desktop HUD",
+      "Productivity",
+      "AI Assistant",
+      "Automation",
+      "Privacy-Focused",
+    ],
     techStack: [
       "Runtime: Electron (Chromium + Node.js)",
       "Frontend: Vanilla HTML/CSS/JavaScript",
@@ -48,9 +71,17 @@ const projects: ProjectData[] = [
     status: "Active Development",
     statusType: "development",
     featured: true,
-    priority: 2,
-    description: "A continuously expanding library of production-ready machine learning models spanning Computer Vision, Natural Language Processing (NLP), and Predictive Analytics. Designed as a modular experimentation suite, this repository features a diverse range of implementations—from foundational CNNs and BiLSTMs to advanced Unsupervised Learning algorithms. It serves as a practical showcase of AI solutions for real-world challenges in healthcare, content moderation, and automated pattern recognition.",
-    tags: ["TensorFlow", "Deep Learning", "Computer Vision", "NLP", "Unsupervised Learning", "AI Research"],
+    priority: 3,
+    description:
+      "A continuously expanding library of production-ready machine learning models spanning Computer Vision, Natural Language Processing (NLP), and Predictive Analytics. Designed as a modular experimentation suite, this repository features a diverse range of implementations—from foundational CNNs and BiLSTMs to advanced Unsupervised Learning algorithms. It serves as a practical showcase of AI solutions for real-world challenges in healthcare, content moderation, and automated pattern recognition.",
+    tags: [
+      "TensorFlow",
+      "Deep Learning",
+      "Computer Vision",
+      "NLP",
+      "Unsupervised Learning",
+      "AI Research",
+    ],
     techStack: [
       "Core: TensorFlow 2.x, Keras, Scikit-learn",
       "Architectures: CNN, BiLSTM, RNN, Autoencoders",
@@ -61,13 +92,45 @@ const projects: ProjectData[] = [
     githubUrl: "https://github.com/Keshav76315/ML-models",
   },
   {
+    title: "turboSH",
+    status: "Complete",
+    statusType: "complete",
+    featured: true,
+    priority: 2,
+    description:
+      "An AI‑powered intelligent middleware layer designed to optimize server performance and enhance security. It automatically schedules and rate-limits incoming requests, caches frequent responses, and utilizes machine learning models (Isolation Forest, SVM) to detect anomalies and mitigate threats in real-time without needing a GPU.",
+    tags: [
+      "Middleware",
+      "AI Security",
+      "Reverse Proxy",
+      "Machine Learning",
+      "Go",
+    ],
+    techStack: [
+      "Middleware: Go (net/http, gin)",
+      "Data Pipeline: Go + Python (pandas, numpy)",
+      "ML: Python (scikit-learn, ONNX)",
+      "Monitoring: Prometheus, Grafana",
+      "Deployment: Docker",
+    ],
+    githubUrl: "https://github.com/Keshav76315/turboSH",
+  },
+  {
     title: "LawBuddy AI",
     status: "Complete",
     statusType: "complete",
     featured: true,
-    priority: 3,
-    description: "An intelligent legal assistant platform powered by a custom, locally-hosted Large Language Model built via fine-tuning — no external API calls, no cloud dependencies. LawBuddy runs entirely on-device for maximum privacy and data sovereignty, providing real-time legal analysis, AI-assisted document drafting, and full case management through a modern web interface.",
-    tags: ["Local LLM", "Ollama", "Legal Tech", "AI Assistant", "Privacy-First", "NLP"],
+    priority: 4,
+    description:
+      "An intelligent legal assistant platform powered by a custom, locally-hosted Large Language Model built via fine-tuning — no external API calls, no cloud dependencies. LawBuddy runs entirely on-device for maximum privacy and data sovereignty, providing real-time legal analysis, AI-assisted document drafting, and full case management through a modern web interface.",
+    tags: [
+      "Local LLM",
+      "Ollama",
+      "Legal Tech",
+      "AI Assistant",
+      "Privacy-First",
+      "NLP",
+    ],
     techStack: [
       "AI: Custom Ollama-hosted Model (LawBuddy:latest)",
       "Backend: Node.js, Express.js",
@@ -81,8 +144,9 @@ const projects: ProjectData[] = [
     title: "MedSafe",
     status: "Prototype Ready",
     statusType: "active",
-    priority: 4,
-    description: "MedSafe is an AI-powered medication safety and verification platform designed to combat counterfeit medicines and prevent dangerous drug interactions. It enables patients, pharmacists, and healthcare providers to verify medication authenticity, analyze interaction risks, and access real-time safety intelligence.",
+    priority: 5,
+    description:
+      "MedSafe is an AI-powered medication safety and verification platform designed to combat counterfeit medicines and prevent dangerous drug interactions. It enables patients, pharmacists, and healthcare providers to verify medication authenticity, analyze interaction risks, and access real-time safety intelligence.",
     tags: ["AI", "OCR", "Drug Databases", "Web Platform", "Healthcare"],
     techStack: [
       "Frontend: React 18, TypeScript, TailwindCSS",
@@ -98,9 +162,16 @@ const projects: ProjectData[] = [
     title: "CodeChicks",
     status: "Live",
     statusType: "active",
-    priority: 5,
-    description: "A full-stack developer productivity platform centered on real-time collaboration and community engagement. Features a polling-powered global chat system for seamless developer communication, a persistent floating timer widget for focus sessions, personalized dashboards with analytics, and multi-provider OAuth (Google & GitHub). Styled with a modern Frost/Cyber aesthetic using advanced glassmorphism effects.",
-    tags: ["Real-Time Chat", "Polling", "OAuth", "Community Platform", "Glassmorphism"],
+    priority: 6,
+    description:
+      "A full-stack developer productivity platform centered on real-time collaboration and community engagement. Features a polling-powered global chat system for seamless developer communication, a persistent floating timer widget for focus sessions, personalized dashboards with analytics, and multi-provider OAuth (Google & GitHub). Styled with a modern Frost/Cyber aesthetic using advanced glassmorphism effects.",
+    tags: [
+      "Real-Time Chat",
+      "Polling",
+      "OAuth",
+      "Community Platform",
+      "Glassmorphism",
+    ],
     techStack: [
       "Backend: Python, FastAPI, Beanie (MongoDB ODM)",
       "Real-Time: Polling",
@@ -115,8 +186,9 @@ const projects: ProjectData[] = [
     title: "Notes API",
     status: "Complete",
     statusType: "complete",
-    priority: 6,
-    description: "RESTful Notes API built with Node.js and Express. Provides endpoints for creating, reading, updating, and deleting notes with MongoDB persistence. Demonstrates backend API development best practices including proper error handling, validation, and database integration.",
+    priority: 7,
+    description:
+      "RESTful Notes API built with Node.js and Express. Provides endpoints for creating, reading, updating, and deleting notes with MongoDB persistence. Demonstrates backend API development best practices including proper error handling, validation, and database integration.",
     tags: ["REST API", "Backend", "Node.js", "MongoDB", "Express.js"],
     techStack: [
       "Runtime: Node.js",
@@ -140,6 +212,7 @@ const frontendSkills = [
 const backendSkills = [
   "Node.js (Express)",
   "Python (FastAPI / Flask)",
+  "Go (Golang)",
   "MongoDB",
   "PostgreSQL",
   "REST / GraphQL APIs",
@@ -150,6 +223,7 @@ const toolsSkills = [
   "Git & GitHub",
   "Docker",
   "Postman",
+  "Prometheus & Grafana",
   "Vercel / Netlify",
   "Linux / WSL",
   "Google Colab",
@@ -157,7 +231,7 @@ const toolsSkills = [
 
 const aimlSkills = [
   "TensorFlow / Keras",
-  "Scikit-learn",
+  "Scikit-learn / ONNX",
   "OpenCV",
   "NLP (BiLSTM / Transformers)",
   "Generative AI (LLMs)",
@@ -186,66 +260,73 @@ const certifications = [
 const Index = () => {
   // Sort projects by priority
   const sortedProjects = [...projects].sort((a, b) => a.priority - b.priority);
-  
+
   return (
     <div className="min-h-screen relative">
       <ParticleBackground />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
         {/* Header / Hero */}
-        <motion.header 
+        <motion.header
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
           className="flex flex-col justify-center min-h-[60vh] mb-20 mt-10" // Increased height for impact
         >
-           <div className="flex justify-between items-start mb-20">
-              <motion.div variants={scaleUp}>
-                 {/* Small logo or status could go here */}
-                 <span className="text-sm font-mono tracking-widest uppercase text-muted-foreground">Portfolio</span>
-              </motion.div>
-              <motion.div variants={scaleUp}>
-                <Navigation />
-              </motion.div>
-           </div>
+          <div className="flex justify-between items-start mb-20">
+            <motion.div variants={scaleUp}>
+              {/* Small logo or status could go here */}
+              <span className="text-sm font-mono tracking-widest uppercase text-muted-foreground">
+                Portfolio
+              </span>
+            </motion.div>
+            <motion.div variants={scaleUp}>
+              <Navigation />
+            </motion.div>
+          </div>
 
           <div className="flex flex-col gap-0 select-none">
             {/* First Name */}
             <div className="overflow-hidden">
-               <motion.h1 
-                  variants={reveal} 
-                  className="text-[12vw] leading-[0.9] font-black tracking-tighter uppercase text-foreground/90 mix-blend-difference"
-               >
-                 Keshav
-               </motion.h1>
+              <motion.h1
+                variants={reveal}
+                className="text-[12vw] leading-[0.9] font-black tracking-tighter uppercase text-foreground/90 mix-blend-difference"
+              >
+                Keshav
+              </motion.h1>
             </div>
-            
+
             {/* Last Name & Subtitle */}
-             <div className="flex flex-col md:flex-row md:items-start justify-between gap-8">
-                <div className="overflow-hidden">
-                  <motion.h1 
-                      variants={reveal} 
-                      className="text-[12vw] leading-[0.9] font-black tracking-tighter uppercase text-foreground/90 mix-blend-difference"
-                  >
-                    Ghai
-                  </motion.h1>
-                </div>
-                
-                <motion.div variants={fadeUp} className="md:max-w-md mt-4 md:mt-10 mx-1">
-                   <p className="text-xl md:text-2xl font-light text-secondary-foreground leading-relaxed">
-                      Full Stack Developer & AI Engineer. <br/>
-                      <span className="opacity-60">Crafting digital experiences that merge logic with design.</span>
-                   </p>
-                </motion.div>
-             </div>
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-8">
+              <div className="overflow-hidden">
+                <motion.h1
+                  variants={reveal}
+                  className="text-[12vw] leading-[0.9] font-black tracking-tighter uppercase text-foreground/90 mix-blend-difference"
+                >
+                  Ghai
+                </motion.h1>
+              </div>
+
+              <motion.div
+                variants={fadeUp}
+                className="md:max-w-md mt-4 md:mt-10 mx-1"
+              >
+                <p className="text-xl md:text-2xl font-light text-secondary-foreground leading-relaxed">
+                  Full Stack Developer & AI Engineer. <br />
+                  <span className="opacity-60">
+                    Crafting digital experiences that merge logic with design.
+                  </span>
+                </p>
+              </motion.div>
+            </div>
           </div>
         </motion.header>
 
         {/* Full-width stacked sections */}
         <main className="space-y-16">
           {/* About Section */}
-          <motion.section 
-            id="about" 
+          <motion.section
+            id="about"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -255,7 +336,13 @@ const Index = () => {
             <div className="glass-card p-8 lg:p-10">
               <h2 className="section-title mb-6">About</h2>
               <p className="text-secondary-foreground leading-relaxed text-lg max-w-4xl">
-                I am a Full Stack Developer and AI Engineer passionate about building scalable, high-performance web applications. With deep expertise in the MERN stack and Machine Learning, I transform complex requirements into elegant, production-ready solutions. My work bridges the gap between robust engineering and intuitive design, helping businesses and startups launch products that matter.
+                I am a Full Stack Developer and AI Engineer passionate about
+                building scalable, high-performance web applications. With deep
+                expertise in the MERN stack and Machine Learning, I transform
+                complex requirements into elegant, production-ready solutions.
+                My work bridges the gap between robust engineering and intuitive
+                design, helping businesses and startups launch products that
+                matter.
               </p>
 
               <div className="mt-10">
@@ -299,7 +386,11 @@ const Index = () => {
                   ))}
                 </ul>
                 <p className="mt-6 text-sm text-muted-foreground border-t border-border/50 pt-4">
-                  <strong className="text-foreground">Typical project turnaround:</strong> 3–7 days for small scopes | Flexible rates for quick turnarounds
+                  <strong className="text-foreground">
+                    Typical project turnaround:
+                  </strong>{" "}
+                  3–7 days for small scopes | Flexible rates for quick
+                  turnarounds
                 </p>
               </div>
             </div>
@@ -316,15 +407,27 @@ const Index = () => {
           >
             <div className="flex items-end justify-between mb-10">
               <div>
-                <motion.h2 variants={fadeUp} className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground/10 leading-none">
+                <motion.h2
+                  variants={fadeUp}
+                  className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground/10 leading-none"
+                >
                   My
                 </motion.h2>
-                <motion.h2 variants={fadeUp} className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-none">
+                <motion.h2
+                  variants={fadeUp}
+                  className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-none"
+                >
                   Projects
                 </motion.h2>
-                <motion.div variants={fadeUp} className="w-24 h-2 bg-accent mt-6" />
+                <motion.div
+                  variants={fadeUp}
+                  className="w-24 h-2 bg-accent mt-6"
+                />
               </div>
-              <motion.span variants={fadeUp} className="text-sm text-muted-foreground mono hidden md:block">
+              <motion.span
+                variants={fadeUp}
+                className="text-sm text-muted-foreground mono hidden md:block"
+              >
                 {sortedProjects.length} Projects
               </motion.span>
             </div>
@@ -341,7 +444,7 @@ const Index = () => {
                 >
                   <div className="relative group">
                     <span className="absolute -top-8 -left-2 text-7xl font-black text-foreground/5 pointer-events-none select-none z-0 hidden md:block">
-                      {(index + 1).toString().padStart(2, '0')}
+                      {(index + 1).toString().padStart(2, "0")}
                     </span>
                     <ProjectCard {...project} />
                   </div>
@@ -361,16 +464,29 @@ const Index = () => {
           >
             <div className="flex items-end justify-between mb-10">
               <div>
-                <motion.h2 variants={fadeUp} className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground/10 leading-none">
+                <motion.h2
+                  variants={fadeUp}
+                  className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground/10 leading-none"
+                >
                   Certified
                 </motion.h2>
-                <motion.h2 variants={fadeUp} className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-none">
+                <motion.h2
+                  variants={fadeUp}
+                  className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-none"
+                >
                   Knowledge
                 </motion.h2>
-                <motion.div variants={fadeUp} className="w-24 h-2 bg-accent mt-6" />
+                <motion.div
+                  variants={fadeUp}
+                  className="w-24 h-2 bg-accent mt-6"
+                />
               </div>
-              <motion.span variants={fadeUp} className="text-sm text-muted-foreground mono hidden md:block">
-                {certifications.length} {certifications.length === 1 ? "Certificate" : "Certificates"}
+              <motion.span
+                variants={fadeUp}
+                className="text-sm text-muted-foreground mono hidden md:block"
+              >
+                {certifications.length}{" "}
+                {certifications.length === 1 ? "Certificate" : "Certificates"}
               </motion.span>
             </div>
 
@@ -382,8 +498,8 @@ const Index = () => {
           </motion.section>
 
           {/* Freelance Section */}
-          <motion.section 
-            id="freelance" 
+          <motion.section
+            id="freelance"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -392,11 +508,15 @@ const Index = () => {
           >
             <div className="flex items-center justify-between mb-8">
               <h2 className="section-title">Freelance Work</h2>
-              <p className="text-sm text-muted-foreground">Client projects & collaborations</p>
+              <p className="text-sm text-muted-foreground">
+                Client projects & collaborations
+              </p>
             </div>
 
             <div className="space-y-8">
-              <motion.div whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}>
+              <motion.div
+                whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+              >
                 <FreelanceCard
                   clientName="Green LeafX"
                   projectName="Sustainability Education Platform"
@@ -409,9 +529,15 @@ const Index = () => {
                     "Robust Production Backend – Migrated from local to production-ready Flask on PythonAnywhere with SQLite persistence",
                   ]}
                   technologies={[
-                    { category: "Backend", items: ["Python", "Flask", "Jinja2"] },
+                    {
+                      category: "Backend",
+                      items: ["Python", "Flask", "Jinja2"],
+                    },
                     { category: "Database", items: ["SQLite"] },
-                    { category: "Frontend", items: ["HTML5", "CSS3", "JavaScript"] },
+                    {
+                      category: "Frontend",
+                      items: ["HTML5", "CSS3", "JavaScript"],
+                    },
                     { category: "APIs", items: ["YouTube Data API v3"] },
                     { category: "Deployment", items: ["PythonAnywhere"] },
                   ]}
@@ -429,8 +555,8 @@ const Index = () => {
           </motion.section>
 
           {/* Skills Section */}
-          <motion.section 
-            id="skills" 
+          <motion.section
+            id="skills"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -438,14 +564,29 @@ const Index = () => {
             className="w-full"
           >
             <div className="glass-card p-8 lg:p-10">
-              <motion.h2 variants={fadeUp} className="section-title mb-6">Skills & Tech</motion.h2>
+              <motion.h2 variants={fadeUp} className="section-title mb-6">
+                Skills & Tech
+              </motion.h2>
 
               <div className="space-y-6">
                 <div>
-                  <motion.h3 variants={fadeUp} className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Frontend</motion.h3>
-                  <motion.div variants={staggerContainer} className="flex flex-wrap gap-3">
+                  <motion.h3
+                    variants={fadeUp}
+                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
+                  >
+                    Frontend
+                  </motion.h3>
+                  <motion.div
+                    variants={staggerContainer}
+                    className="flex flex-wrap gap-3"
+                  >
                     {frontendSkills.map((skill) => (
-                      <motion.span key={skill} variants={scaleUp} whileHover={{ scale: 1.1 }} className="skill-tag text-base px-4 py-2">
+                      <motion.span
+                        key={skill}
+                        variants={scaleUp}
+                        whileHover={{ scale: 1.1 }}
+                        className="skill-tag text-base px-4 py-2"
+                      >
                         {skill}
                       </motion.span>
                     ))}
@@ -453,10 +594,23 @@ const Index = () => {
                 </div>
 
                 <div>
-                  <motion.h3 variants={fadeUp} className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Backend</motion.h3>
-                  <motion.div variants={staggerContainer} className="flex flex-wrap gap-3">
+                  <motion.h3
+                    variants={fadeUp}
+                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
+                  >
+                    Backend
+                  </motion.h3>
+                  <motion.div
+                    variants={staggerContainer}
+                    className="flex flex-wrap gap-3"
+                  >
                     {backendSkills.map((skill) => (
-                      <motion.span key={skill} variants={scaleUp} whileHover={{ scale: 1.1 }} className="skill-tag text-base px-4 py-2">
+                      <motion.span
+                        key={skill}
+                        variants={scaleUp}
+                        whileHover={{ scale: 1.1 }}
+                        className="skill-tag text-base px-4 py-2"
+                      >
                         {skill}
                       </motion.span>
                     ))}
@@ -464,10 +618,23 @@ const Index = () => {
                 </div>
 
                 <div>
-                  <motion.h3 variants={fadeUp} className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Tools & Languages</motion.h3>
-                  <motion.div variants={staggerContainer} className="flex flex-wrap gap-3">
+                  <motion.h3
+                    variants={fadeUp}
+                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
+                  >
+                    Tools & Languages
+                  </motion.h3>
+                  <motion.div
+                    variants={staggerContainer}
+                    className="flex flex-wrap gap-3"
+                  >
                     {toolsSkills.map((skill) => (
-                      <motion.span key={skill} variants={scaleUp} whileHover={{ scale: 1.1 }} className="skill-tag text-base px-4 py-2">
+                      <motion.span
+                        key={skill}
+                        variants={scaleUp}
+                        whileHover={{ scale: 1.1 }}
+                        className="skill-tag text-base px-4 py-2"
+                      >
                         {skill}
                       </motion.span>
                     ))}
@@ -475,10 +642,23 @@ const Index = () => {
                 </div>
 
                 <div>
-                  <motion.h3 variants={fadeUp} className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">AI / ML</motion.h3>
-                  <motion.div variants={staggerContainer} className="flex flex-wrap gap-3">
+                  <motion.h3
+                    variants={fadeUp}
+                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
+                  >
+                    AI / ML
+                  </motion.h3>
+                  <motion.div
+                    variants={staggerContainer}
+                    className="flex flex-wrap gap-3"
+                  >
                     {aimlSkills.map((skill) => (
-                      <motion.span key={skill} variants={scaleUp} whileHover={{ scale: 1.1 }} className="skill-tag text-base px-4 py-2">
+                      <motion.span
+                        key={skill}
+                        variants={scaleUp}
+                        whileHover={{ scale: 1.1 }}
+                        className="skill-tag text-base px-4 py-2"
+                      >
                         {skill}
                       </motion.span>
                     ))}
@@ -488,9 +668,8 @@ const Index = () => {
             </div>
           </motion.section>
 
-
           {/* Resume Download Section */}
-          <motion.section 
+          <motion.section
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -500,7 +679,8 @@ const Index = () => {
             <div className="glass-card p-8 lg:p-10 text-center">
               <h2 className="section-title mb-4">Want to know more?</h2>
               <p className="text-secondary-foreground mb-6 max-w-2xl mx-auto">
-                Download my resume for a detailed overview of my education, experience, and skills.
+                Download my resume for a detailed overview of my education,
+                experience, and skills.
               </p>
               <motion.a
                 href="/resume.pdf"
@@ -516,8 +696,8 @@ const Index = () => {
           </motion.section>
 
           {/* Contact Section */}
-          <motion.section 
-            id="contact" 
+          <motion.section
+            id="contact"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -539,8 +719,8 @@ const Index = () => {
                   <Mail className="w-4 h-4" />
                   ghaikeshav55@gmail.com
                 </motion.a>
-                <motion.a 
-                  href="tel:+917657805107" 
+                <motion.a
+                  href="tel:+917657805107"
                   className="btn-ghost"
                   whileHover={{ scale: 1.05, x: 5 }}
                 >
@@ -555,7 +735,11 @@ const Index = () => {
                   target="_blank"
                   rel="noreferrer"
                   className="btn-ghost"
-                  whileHover={{ scale: 1.1, rotate: 10, color: "var(--accent)" }}
+                  whileHover={{
+                    scale: 1.1,
+                    rotate: 10,
+                    color: "var(--accent)",
+                  }}
                   whileTap={{ scale: 0.9 }}
                 >
                   <Github className="w-5 h-5" />
@@ -582,5 +766,5 @@ const Index = () => {
       </div>
     </div>
   );
-}
+};
 export default Index;
