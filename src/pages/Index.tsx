@@ -336,13 +336,7 @@ const Index = () => {
             <div className="glass-card p-8 lg:p-10">
               <h2 className="section-title mb-6">About</h2>
               <p className="text-secondary-foreground leading-relaxed text-lg max-w-4xl">
-                I am a Full Stack Developer and AI Engineer passionate about
-                building scalable, high-performance web applications. With deep
-                expertise in the MERN stack and Machine Learning, I transform
-                complex requirements into elegant, production-ready solutions.
-                My work bridges the gap between robust engineering and intuitive
-                design, helping businesses and startups launch products that
-                matter.
+                I am a Full Stack Developer and AI Engineer currently pursuing a BS degree in Data Science and Applications at IIT Madras. Passionate about building scalable, high-performance web applications, I combine deep expertise in the MERN stack with Machine Learning capabilities to transform complex requirements into elegant, production-ready solutions. My work bridges the gap between robust engineering and intuitive design, helping businesses and startups launch impactful products.
               </p>
 
               <div className="mt-10">
