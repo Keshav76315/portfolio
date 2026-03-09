@@ -301,7 +301,7 @@ const Index = () => {
               <div className="overflow-hidden">
                 <motion.h1
                   variants={reveal}
-                  className="text-[12vw] leading-[0.9] font-black tracking-tighter uppercase text-foreground/90 mix-blend-difference"
+                  className="text-[12vw] leading-[0.9] font-black tracking-tighter uppercase text-foreground/10"
                 >
                   Ghai
                 </motion.h1>
