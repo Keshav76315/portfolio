@@ -64,7 +64,6 @@ const projects: ProjectData[] = [
       "Logging: Winston (JSON format)",
     ],
     githubUrl: "https://github.com/Keshav76315/guidons-eye",
-    demoPlaceholder: true,
   },
   {
     title: "TensorFlow Multi-Model AI Suite",
@@ -222,6 +221,7 @@ const backendSkills = [
 const toolsSkills = [
   "Git & GitHub",
   "Docker",
+  "AWS",
   "Postman",
   "Prometheus & Grafana",
   "Vercel / Netlify",
@@ -254,6 +254,14 @@ const certifications = [
     description:
       "A comprehensive 12-course professional certificate covering the entire data science lifecycle — from Python programming, SQL, and data analysis to machine learning, deep learning, and data visualization. Completed hands-on capstone projects involving real-world datasets, building predictive models with Scikit-learn and TensorFlow, and creating interactive dashboards with Plotly and Dash.",
     imageUrl: "/Certificate.png",
+  },
+  {
+    title: "AWS Cloud Practitioner Essentials",
+    issuer: "Amazon Web Services via Coursera",
+    date: "March 2026",
+    description:
+      "An introductory course by AWS covering core cloud concepts, AWS services, security, architecture, pricing, and support. Gained foundational knowledge of cloud computing and the AWS ecosystem, including compute, storage, networking, and database services.",
+    imageUrl: "/AWS_Ceriticate.png",
   },
 ];
 
