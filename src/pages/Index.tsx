@@ -263,6 +263,14 @@ const certifications = [
       "An introductory course by AWS covering core cloud concepts, AWS services, security, architecture, pricing, and support. Gained foundational knowledge of cloud computing and the AWS ecosystem, including compute, storage, networking, and database services.",
     imageUrl: "/AWS_Ceriticate.png",
   },
+  {
+    title: "Applied Software Engineering Fundamentals",
+    issuer: "IBM via Coursera",
+    date: "March 2026",
+    description:
+      "A 5-course specialization covering fundamental software engineering concepts — the Software Development Lifecycle, Git & GitHub workflows, Linux commands & shell scripting, Python for AI & data science, and building AI applications with Python and Flask.",
+    imageUrl: "/IBM_SWE_Certificate.png",
+  },
 ];
 
 const Index = () => {
