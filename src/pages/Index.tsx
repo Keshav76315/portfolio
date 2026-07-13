@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Mail,
   Phone,
@@ -6,23 +5,24 @@ import {
   Linkedin,
   Download,
   CheckCircle,
-  ChevronDown,
-  ChevronUp,
-  Award,
+  Beaker,
 } from "lucide-react";
 import ParticleBackground from "@/components/ParticleBackground";
 import Navigation from "@/components/Navigation";
 import ProjectCard from "@/components/ProjectCard";
-import FreelanceCard from "@/components/FreelanceCard";
+import ExperienceCard from "@/components/ExperienceCard";
 import CertificationCard from "@/components/CertificationCard";
 import { motion } from "framer-motion";
 import {
   fadeUp,
-  heroText,
   staggerContainer,
   scaleUp,
   reveal,
 } from "@/lib/animations";
+
+// ─────────────────────────────────────
+// PROJECT DATA
+// ─────────────────────────────────────
 
 interface ProjectData {
   title: string;
@@ -35,10 +35,11 @@ interface ProjectData {
   githubUrl?: string;
   demoPlaceholder?: boolean;
   featured?: boolean;
-  priority: number; // Lower number = higher priority
+  priority: number;
 }
 
-const projects: ProjectData[] = [
+// Primary Featured Projects
+const featuredProjects: ProjectData[] = [
   {
     title: "Guidon's Eye",
     status: "Prototype Ready",
@@ -64,31 +65,6 @@ const projects: ProjectData[] = [
       "Logging: Winston (JSON format)",
     ],
     githubUrl: "https://github.com/Keshav76315/guidons-eye",
-  },
-  {
-    title: "TensorFlow Multi-Model AI Suite",
-    status: "Active Development",
-    statusType: "development",
-    featured: true,
-    priority: 3,
-    description:
-      "A continuously expanding library of production-ready machine learning models spanning Computer Vision, Natural Language Processing (NLP), and Predictive Analytics. Designed as a modular experimentation suite, this repository features a diverse range of implementations—from foundational CNNs and BiLSTMs to advanced Unsupervised Learning algorithms. It serves as a practical showcase of AI solutions for real-world challenges in healthcare, content moderation, and automated pattern recognition.",
-    tags: [
-      "TensorFlow",
-      "Deep Learning",
-      "Computer Vision",
-      "NLP",
-      "Unsupervised Learning",
-      "AI Research",
-    ],
-    techStack: [
-      "Core: TensorFlow 2.x, Keras, Scikit-learn",
-      "Architectures: CNN, BiLSTM, RNN, Autoencoders",
-      "Techniques: Transfer Learning, Tokenization, Clustering (PCA/t-SNE)",
-      "Processing: Pandas, OpenCV, NumPy",
-      "Deployment: Model Serialization (.h5/.keras)",
-    ],
-    githubUrl: "https://github.com/Keshav76315/ML-models",
   },
   {
     title: "turboSH",
@@ -119,7 +95,7 @@ const projects: ProjectData[] = [
     status: "Complete",
     statusType: "complete",
     featured: true,
-    priority: 4,
+    priority: 3,
     description:
       "An intelligent legal assistant platform powered by a custom, locally-hosted Large Language Model built via fine-tuning — no external API calls, no cloud dependencies. LawBuddy runs entirely on-device for maximum privacy and data sovereignty, providing real-time legal analysis, AI-assisted document drafting, and full case management through a modern web interface.",
     tags: [
@@ -139,6 +115,33 @@ const projects: ProjectData[] = [
     ],
     githubUrl: "https://github.com/Keshav76315/LawBuddy",
   },
+  {
+    title: "Recommendation Engine",
+    status: "Complete",
+    statusType: "complete",
+    featured: true,
+    priority: 4,
+    description:
+      "A production-grade recommendation engine implementing collaborative filtering, content-based filtering, and hybrid approaches to deliver personalized suggestions. Designed as a modular ML pipeline with data preprocessing, model training, and real-time inference capabilities for scalable recommendation use cases.",
+    tags: [
+      "Machine Learning",
+      "Collaborative Filtering",
+      "Content-Based",
+      "Recommendation System",
+      "Data Pipeline",
+    ],
+    techStack: [
+      "Core: Python, Scikit-learn, Pandas, NumPy",
+      "Techniques: Collaborative Filtering, Content-Based Filtering",
+      "Processing: TF-IDF, Cosine Similarity",
+      "Evaluation: Precision, Recall, RMSE",
+    ],
+    githubUrl: "https://github.com/Keshav76315/recommendation-engine",
+  },
+];
+
+// Regular (non-featured) projects
+const regularProjects: ProjectData[] = [
   {
     title: "MedSafe",
     status: "Prototype Ready",
@@ -163,7 +166,7 @@ const projects: ProjectData[] = [
     statusType: "active",
     priority: 6,
     description:
-      "A full-stack developer productivity platform centered on real-time collaboration and community engagement. Features a polling-powered global chat system for seamless developer communication, a persistent floating timer widget for focus sessions, personalized dashboards with analytics, and multi-provider OAuth (Google & GitHub). Styled with a modern Frost/Cyber aesthetic using advanced glassmorphism effects.",
+      "A full-stack developer productivity platform centered on real-time collaboration and community engagement. Features a polling-powered global chat system for seamless developer communication, a persistent floating timer widget for focus sessions, personalized dashboards with analytics, and multi-provider OAuth (Google & GitHub).",
     tags: [
       "Real-Time Chat",
       "Polling",
@@ -198,6 +201,36 @@ const projects: ProjectData[] = [
     githubUrl: "https://github.com/Keshav76315/notes-api",
   },
 ];
+
+// Experimental Models (secondary subsection)
+const experimentalProjects: ProjectData[] = [
+  {
+    title: "TensorFlow Multi-Model AI Suite",
+    status: "Active Development",
+    statusType: "development",
+    priority: 10,
+    description:
+      "A continuously expanding library of production-ready machine learning models spanning Computer Vision, NLP, and Predictive Analytics. Features diverse implementations from CNNs and BiLSTMs to advanced Unsupervised Learning algorithms.",
+    tags: [
+      "TensorFlow",
+      "Deep Learning",
+      "Computer Vision",
+      "NLP",
+      "Unsupervised Learning",
+    ],
+    techStack: [
+      "Core: TensorFlow 2.x, Keras, Scikit-learn",
+      "Architectures: CNN, BiLSTM, RNN, Autoencoders",
+      "Techniques: Transfer Learning, Tokenization, Clustering (PCA/t-SNE)",
+      "Processing: Pandas, OpenCV, NumPy",
+    ],
+    githubUrl: "https://github.com/Keshav76315/ML-models",
+  },
+];
+
+// ─────────────────────────────────────
+// SKILLS DATA
+// ─────────────────────────────────────
 
 const frontendSkills = [
   "React / Next.js",
@@ -238,6 +271,64 @@ const aimlSkills = [
   "Data Analysis (Pandas/NumPy)",
 ];
 
+const architectureSkills = [
+  "GstarCAD",
+  "SketchUp",
+  "Working Drawings",
+  "Construction Documentation",
+  "Site Inspection",
+];
+
+const designSkills = [
+  "Graphic Design",
+  "UI Layouting",
+  "Visual Communication",
+  "Interior Visualization",
+];
+
+// ─────────────────────────────────────
+// CERTIFICATIONS DATA
+// ─────────────────────────────────────
+
+const certifications = [
+  {
+    title: "IBM Data Science Professional Certificate",
+    issuer: "IBM via Coursera",
+    date: "February 2026",
+    description:
+      "Comprehensive 12-course certificate covering the entire data science lifecycle — Python, SQL, data analysis, machine learning, deep learning, and data visualization with hands-on capstone projects.",
+    credentialUrl: "/ds-certificate.pdf",
+  },
+  {
+    title: "IBM AI Engineering Professional Certificate",
+    issuer: "IBM via Coursera",
+    date: "April 2026",
+    description:
+      "Rigorous training in architecting and deploying AI solutions, emphasizing deep learning frameworks, model optimization, and scalable MLOps practices for production-ready intelligent systems.",
+    credentialUrl: "/AI-eng-certificate.pdf",
+  },
+  {
+    title: "AWS Cloud Practitioner Essentials",
+    issuer: "Amazon Web Services via Coursera",
+    date: "March 2026",
+    description:
+      "Core cloud concepts, AWS services, security, architecture, pricing, and support. Foundational knowledge of compute, storage, networking, and database services.",
+    credentialUrl: "/AWS-Certificate.pdf",
+  },
+  {
+    title: "Applied Software Engineering Fundamentals",
+    issuer: "IBM via Coursera",
+    date: "March 2026",
+    description:
+      "5-course specialization covering SDLC, Git & GitHub workflows, Linux & shell scripting, Python for AI & data science, and building AI applications with Flask.",
+    credentialUrl: "/SEF-certificate.pdf",
+  },
+];
+
+// ─────────────────────────────────────
+// FREELANCE SERVICES DATA
+// ─────────────────────────────────────
+
 const availableForServices = [
   "Custom websites & landing pages (React, HTML, CSS, Tailwind)",
   "Full-stack web applications (MERN stack: React, Node.js, Express, MongoDB)",
@@ -246,52 +337,31 @@ const availableForServices = [
   "UI/UX implementation & responsive design",
 ];
 
-const certifications = [
-  {
-    title: "IBM Data Science Professional Certificate",
-    issuer: "IBM via Coursera",
-    date: "February 2026",
-    description:
-      "A comprehensive 12-course professional certificate covering the entire data science lifecycle — from Python programming, SQL, and data analysis to machine learning, deep learning, and data visualization. Completed hands-on capstone projects involving real-world datasets, building predictive models with Scikit-learn and TensorFlow, and creating interactive dashboards with Plotly and Dash.",
-    imageUrl: "/Certificate.png",
-  },
-  {
-    title: "AWS Cloud Practitioner Essentials",
-    issuer: "Amazon Web Services via Coursera",
-    date: "March 2026",
-    description:
-      "An introductory course by AWS covering core cloud concepts, AWS services, security, architecture, pricing, and support. Gained foundational knowledge of cloud computing and the AWS ecosystem, including compute, storage, networking, and database services.",
-    imageUrl: "/AWS_Ceriticate.png",
-  },
-  {
-    title: "Applied Software Engineering Fundamentals",
-    issuer: "IBM via Coursera",
-    date: "March 2026",
-    description:
-      "A 5-course specialization covering fundamental software engineering concepts — the Software Development Lifecycle, Git & GitHub workflows, Linux commands & shell scripting, Python for AI & data science, and building AI applications with Python and Flask.",
-    imageUrl: "/IBM_SWE_Certificate.png",
-  },
-];
+// ─────────────────────────────────────
+// COMPONENT
+// ─────────────────────────────────────
 
 const Index = () => {
-  // Sort projects by priority
-  const sortedProjects = [...projects].sort((a, b) => a.priority - b.priority);
+  const allFeatured = [...featuredProjects].sort((a, b) => a.priority - b.priority);
+  const allRegular = [...regularProjects].sort((a, b) => a.priority - b.priority);
+  const totalProjectCount = allFeatured.length + allRegular.length + experimentalProjects.length;
 
   return (
     <div className="min-h-screen relative">
       <ParticleBackground />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
-        {/* Header / Hero */}
+        {/* ═══════════════════════════════ */}
+        {/* HERO SECTION */}
+        {/* ═══════════════════════════════ */}
         <motion.header
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
-          className="flex flex-col justify-center min-h-[60vh] mb-20 mt-10" // Increased height for impact
+          className="flex flex-col justify-center min-h-[60vh] mb-20 mt-10"
         >
           <div className="flex justify-between items-start mb-20">
             <motion.div variants={scaleUp}>
-              {/* Small logo or status could go here */}
               <span className="text-sm font-mono tracking-widest uppercase text-muted-foreground">
                 Portfolio
               </span>
@@ -328,7 +398,7 @@ const Index = () => {
                 className="md:max-w-md mt-4 md:mt-10 mx-1"
               >
                 <p className="text-xl md:text-2xl font-light text-secondary-foreground leading-relaxed">
-                  Full Stack Developer & AI Engineer. <br />
+                  Software Engineer, AI Builder & Technical Designer. <br />
                   <span className="opacity-60">
                     Crafting digital experiences that merge logic with design.
                   </span>
@@ -338,9 +408,13 @@ const Index = () => {
           </div>
         </motion.header>
 
-        {/* Full-width stacked sections */}
+        {/* ═══════════════════════════════ */}
+        {/* MAIN SECTIONS */}
+        {/* ═══════════════════════════════ */}
         <main className="space-y-16">
-          {/* About Section */}
+          {/* ─────────────────────────── */}
+          {/* ABOUT SECTION */}
+          {/* ─────────────────────────── */}
           <motion.section
             id="about"
             initial="hidden"
@@ -352,7 +426,7 @@ const Index = () => {
             <div className="glass-card p-8 lg:p-10">
               <h2 className="section-title mb-6">About</h2>
               <p className="text-secondary-foreground leading-relaxed text-lg max-w-4xl">
-                I am a Full Stack Developer and AI Engineer currently pursuing a BS degree in Data Science and Applications at IIT Madras. Passionate about building scalable, high-performance web applications, I combine deep expertise in the MERN stack with Machine Learning capabilities to transform complex requirements into elegant, production-ready solutions. My work bridges the gap between robust engineering and intuitive design, helping businesses and startups launch impactful products.
+                Software engineer with hands-on experience across full-stack development, AI/ML, automation, and technical design workflows. Currently pursuing a BS in Data Science and Applications at IIT Madras while working in real-world technical environments spanning software systems and architectural execution. Strong interest in building scalable products, intelligent systems, and practical automation solutions.
               </p>
 
               <div className="mt-10">
@@ -372,41 +446,20 @@ const Index = () => {
                   </li>
                   <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
                     <span className="w-2 h-2 rounded-full bg-accent" />
-                    Advanced Data Structures & System Design
+                    Technical design & architectural execution
                   </li>
                   <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
                     <span className="w-2 h-2 rounded-full bg-accent" />
-                    Open Source Contribution
+                    Advanced Data Structures & System Design
                   </li>
                 </ul>
-              </div>
-
-              {/* Available For Section */}
-              <div className="mt-10 p-6 rounded-xl bg-accent/5 border border-accent/20">
-                <h3 className="section-subtitle mb-5 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-accent" />
-                  Available For
-                </h3>
-                <ul className="space-y-3 text-secondary-foreground">
-                  {availableForServices.map((service, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <span className="text-accent font-bold mt-0.5">✓</span>
-                      {service}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-6 text-sm text-muted-foreground border-t border-border/50 pt-4">
-                  <strong className="text-foreground">
-                    Typical project turnaround:
-                  </strong>{" "}
-                  3–7 days for small scopes | Flexible rates for quick
-                  turnarounds
-                </p>
               </div>
             </div>
           </motion.section>
 
-          {/* Projects Section - Responsive Grid */}
+          {/* ─────────────────────────── */}
+          {/* PROJECTS SECTION */}
+          {/* ─────────────────────────── */}
           <motion.section
             id="projects"
             initial="hidden"
@@ -438,15 +491,16 @@ const Index = () => {
                 variants={fadeUp}
                 className="text-sm text-muted-foreground mono hidden md:block"
               >
-                {sortedProjects.length} Projects
+                {totalProjectCount} Projects
               </motion.span>
             </div>
 
+            {/* Featured Projects */}
             <motion.div
               variants={staggerContainer}
               className="grid grid-cols-1 md:grid-cols-2 gap-6"
             >
-              {sortedProjects.map((project, index) => (
+              {allFeatured.map((project, index) => (
                 <motion.div
                   key={project.title}
                   variants={fadeUp}
@@ -461,11 +515,88 @@ const Index = () => {
                 </motion.div>
               ))}
             </motion.div>
+
+            {/* Regular Projects */}
+            {allRegular.length > 0 && (
+              <motion.div
+                variants={staggerContainer}
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6"
+              >
+                {allRegular.map((project, index) => (
+                  <motion.div
+                    key={project.title}
+                    variants={fadeUp}
+                  >
+                    <div className="relative group">
+                      <span className="absolute -top-8 -left-2 text-7xl font-black text-foreground/5 pointer-events-none select-none z-0 hidden md:block">
+                        {(allFeatured.length + index + 1).toString().padStart(2, "0")}
+                      </span>
+                      <ProjectCard {...project} />
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+
+            {/* Experimental Models Subsection */}
+            {experimentalProjects.length > 0 && (
+              <motion.div
+                variants={fadeUp}
+                className="mt-12"
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <Beaker className="w-4 h-4 text-muted-foreground" />
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                    Experimental Models
+                  </h3>
+                  <div className="flex-1 h-px bg-border/30" />
+                </div>
+                <div className="grid grid-cols-1 gap-5">
+                  {experimentalProjects.map((project) => (
+                    <motion.div key={project.title} variants={fadeUp}>
+                      <div className="experimental-card p-5 lg:p-6">
+                        <div className="flex items-start justify-between gap-4 mb-3">
+                          <div className="flex items-center gap-2">
+                            <h4 className="text-base font-semibold">{project.title}</h4>
+                          </div>
+                          <span className="status-badge bg-primary/20 text-primary text-xs">
+                            {project.status}
+                          </span>
+                        </div>
+                        <p className="text-sm text-secondary-foreground leading-relaxed mb-4">
+                          {project.description}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {project.tags.map((tag, idx) => (
+                            <span key={idx} className="skill-tag text-xs px-2 py-1">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        {project.githubUrl && (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn-ghost text-xs"
+                          >
+                            <Github className="w-3.5 h-3.5" />
+                            View Source Code
+                          </a>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </motion.section>
 
-          {/* Certifications Section */}
+          {/* ─────────────────────────── */}
+          {/* PROFESSIONAL EXPERIENCE */}
+          {/* ─────────────────────────── */}
           <motion.section
-            id="certifications"
+            id="experience"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -478,13 +609,13 @@ const Index = () => {
                   variants={fadeUp}
                   className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground/10 leading-none"
                 >
-                  Certified
+                  Professional
                 </motion.h2>
                 <motion.h2
                   variants={fadeUp}
                   className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-none"
                 >
-                  Knowledge
+                  Experience
                 </motion.h2>
                 <motion.div
                   variants={fadeUp}
@@ -495,19 +626,90 @@ const Index = () => {
                 variants={fadeUp}
                 className="text-sm text-muted-foreground mono hidden md:block"
               >
-                {certifications.length}{" "}
-                {certifications.length === 1 ? "Certificate" : "Certificates"}
+                3 Roles
               </motion.span>
             </div>
 
-            <div className="space-y-6">
-              {certifications.map((cert) => (
-                <CertificationCard key={cert.title} {...cert} />
-              ))}
-            </div>
+            <motion.div
+              variants={staggerContainer}
+              className="space-y-8"
+            >
+              <ExperienceCard
+                company="Studio Eclecea"
+                role="Architectural Intern"
+                period="Apr 2026 – Present"
+                status="active"
+                statusLabel="Active"
+                description="Working on residential and interior design projects involving architectural drafting and execution-level detailing. Responsible for floor plans, electrical/plumbing/sanitary layouts, furniture detailing, front elevations, and site inspection reporting while collaborating directly on design refinements."
+                responsibilities={[
+                  "Floor Plans",
+                  "Working Drawings",
+                  "Electrical Layouts",
+                  "Plumbing Layouts",
+                  "Sanitary Detailing",
+                  "Furniture Elevations",
+                  "Front Elevations",
+                  "Interior Planning",
+                  "Site Inspections",
+                ]}
+                tools={[
+                  "GstarCAD",
+                  "SketchUp",
+                  "Construction Documentation",
+                  "Working Drawings",
+                  "Site Coordination",
+                ]}
+                isFirst
+              />
+
+              <ExperienceCard
+                company="Green LeafX"
+                role="Freelance Full-Stack Developer"
+                period="Client Project"
+                status="client"
+                statusLabel="Client Work"
+                description="Built a comprehensive educational platform dedicated to promoting sustainability and eco-conscious living. Full-stack freelance web application serving as a central hub for environmental education, aggregating content from various sources to provide a seamless learning experience with automated video feeds, structured course modules, and community notes."
+                responsibilities={[
+                  "End-to-end Full Stack Development",
+                  "Cloud Production Migration",
+                  "API Optimization",
+                  "Eco-Brand UI/UX Design",
+                ]}
+                tools={[
+                  "Python",
+                  "Flask",
+                  "Jinja2",
+                  "SQLite",
+                  "HTML5",
+                  "CSS3",
+                  "JavaScript",
+                  "YouTube Data API v3",
+                  "PythonAnywhere",
+                ]}
+              />
+
+              <ExperienceCard
+                company="Unified Mentor"
+                role="Applied Machine Learning Trainee"
+                period="2025"
+                status="completed"
+                statusLabel="Completed"
+                description="Completed a structured applied machine learning training program covering supervised and unsupervised learning, model evaluation, and real-world dataset analysis. Built and evaluated multiple ML models across classification, regression, and clustering tasks."
+                tools={[
+                  "Python",
+                  "Scikit-learn",
+                  "Pandas",
+                  "NumPy",
+                  "Matplotlib",
+                ]}
+                isLast
+              />
+            </motion.div>
           </motion.section>
 
-          {/* Freelance Section */}
+          {/* ─────────────────────────── */}
+          {/* FREELANCE SECTION */}
+          {/* ─────────────────────────── */}
           <motion.section
             id="freelance"
             initial="hidden"
@@ -516,55 +718,64 @@ const Index = () => {
             variants={fadeUp}
             className="w-full"
           >
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="section-title">Freelance Work</h2>
-              <p className="text-sm text-muted-foreground">
-                Client projects & collaborations
+            <div className="glass-card p-8 lg:p-10">
+              <div className="flex items-center gap-3 mb-6">
+                <CheckCircle className="w-5 h-5 text-accent" />
+                <h2 className="section-title">Available for Freelance</h2>
+              </div>
+              <p className="text-secondary-foreground mb-6 text-lg max-w-3xl">
+                I take on freelance projects ranging from landing pages to full-stack applications. Here's what I can help with:
               </p>
-            </div>
-
-            <div className="space-y-8">
-              <motion.div
-                whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
-              >
-                <FreelanceCard
-                  clientName="Green LeafX"
-                  projectName="Sustainability Education Platform"
-                  overview="A comprehensive educational platform dedicated to promoting sustainability and eco-conscious living. Built as a full-stack freelance web application serving as a central hub for environmental education, aggregating content from various sources to provide a seamless learning experience with automated video feeds, structured course modules, and community notes."
-                  features={[
-                    "Automated Content Aggregation – Integrated YouTube Data API v3 to dynamically fetch, filter, and display educational videos with custom logic for title cleaning and ISO 8601 duration parsing",
-                    "Custom Admin Dashboard – Secure, role-based admin panel for managing courses, uploading notes, and viewing real-time platform analytics",
-                    "Course Management System – Database-backed architecture supporting multi-level courses (Beginner to Advanced) with rich media and enrollment tracking",
-                    "Responsive 'Eco' Design – Custom sustainability-themed UI using modern CSS3 (Glassmorphism, CSS Grid) fully responsive across devices",
-                    "Robust Production Backend – Migrated from local to production-ready Flask on PythonAnywhere with SQLite persistence",
-                  ]}
-                  technologies={[
-                    {
-                      category: "Backend",
-                      items: ["Python", "Flask", "Jinja2"],
-                    },
-                    { category: "Database", items: ["SQLite"] },
-                    {
-                      category: "Frontend",
-                      items: ["HTML5", "CSS3", "JavaScript"],
-                    },
-                    { category: "APIs", items: ["YouTube Data API v3"] },
-                    { category: "Deployment", items: ["PythonAnywhere"] },
-                  ]}
-                  responsibilities={[
-                    "End-to-end Full Stack Development",
-                    "Migrating codebase from local to cloud production",
-                    "Optimizing API usage within quota limits",
-                    "Designing UI/UX aligned with eco-friendly brand identity",
-                  ]}
-                  liveUrl="https://greenleafx.pythonanywhere.com"
-                  accentColor="green"
-                />
-              </motion.div>
+              <ul className="space-y-3 text-secondary-foreground mb-6">
+                {availableForServices.map((service, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <span className="text-accent font-bold mt-0.5">✓</span>
+                    {service}
+                  </li>
+                ))}
+              </ul>
+              <p className="text-sm text-muted-foreground border-t border-border/50 pt-4">
+                <strong className="text-foreground">
+                  Typical project turnaround:
+                </strong>{" "}
+                3–7 days for small scopes | Flexible rates for quick
+                turnarounds
+              </p>
             </div>
           </motion.section>
 
-          {/* Skills Section */}
+          {/* ─────────────────────────── */}
+          {/* CERTIFICATIONS SECTION */}
+          {/* ─────────────────────────── */}
+          <motion.section
+            id="certifications"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="w-full"
+          >
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="section-title">Certifications</h2>
+              <motion.span
+                variants={fadeUp}
+                className="text-sm text-muted-foreground mono hidden md:block"
+              >
+                {certifications.length}{" "}
+                {certifications.length === 1 ? "Certificate" : "Certificates"}
+              </motion.span>
+            </div>
+
+            <div className="space-y-3">
+              {certifications.map((cert) => (
+                <CertificationCard key={cert.title} {...cert} />
+              ))}
+            </div>
+          </motion.section>
+
+          {/* ─────────────────────────── */}
+          {/* SKILLS SECTION */}
+          {/* ─────────────────────────── */}
           <motion.section
             id="skills"
             initial="hidden"
@@ -579,6 +790,7 @@ const Index = () => {
               </motion.h2>
 
               <div className="space-y-6">
+                {/* Frontend */}
                 <div>
                   <motion.h3
                     variants={fadeUp}
@@ -603,6 +815,7 @@ const Index = () => {
                   </motion.div>
                 </div>
 
+                {/* Backend */}
                 <div>
                   <motion.h3
                     variants={fadeUp}
@@ -627,6 +840,7 @@ const Index = () => {
                   </motion.div>
                 </div>
 
+                {/* Tools & Languages */}
                 <div>
                   <motion.h3
                     variants={fadeUp}
@@ -651,6 +865,7 @@ const Index = () => {
                   </motion.div>
                 </div>
 
+                {/* AI / ML */}
                 <div>
                   <motion.h3
                     variants={fadeUp}
@@ -674,11 +889,63 @@ const Index = () => {
                     ))}
                   </motion.div>
                 </div>
+
+                {/* Architecture & Drafting */}
+                <div>
+                  <motion.h3
+                    variants={fadeUp}
+                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
+                  >
+                    Architecture & Drafting
+                  </motion.h3>
+                  <motion.div
+                    variants={staggerContainer}
+                    className="flex flex-wrap gap-3"
+                  >
+                    {architectureSkills.map((skill) => (
+                      <motion.span
+                        key={skill}
+                        variants={scaleUp}
+                        whileHover={{ scale: 1.1 }}
+                        className="skill-tag text-base px-4 py-2"
+                      >
+                        {skill}
+                      </motion.span>
+                    ))}
+                  </motion.div>
+                </div>
+
+                {/* Design & Visualization */}
+                <div>
+                  <motion.h3
+                    variants={fadeUp}
+                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
+                  >
+                    Design & Visualization
+                  </motion.h3>
+                  <motion.div
+                    variants={staggerContainer}
+                    className="flex flex-wrap gap-3"
+                  >
+                    {designSkills.map((skill) => (
+                      <motion.span
+                        key={skill}
+                        variants={scaleUp}
+                        whileHover={{ scale: 1.1 }}
+                        className="skill-tag text-base px-4 py-2"
+                      >
+                        {skill}
+                      </motion.span>
+                    ))}
+                  </motion.div>
+                </div>
               </div>
             </div>
           </motion.section>
 
-          {/* Resume Download Section */}
+          {/* ─────────────────────────── */}
+          {/* RESUME DOWNLOAD */}
+          {/* ─────────────────────────── */}
           <motion.section
             initial="hidden"
             whileInView="visible"
@@ -693,7 +960,7 @@ const Index = () => {
                 experience, and skills.
               </p>
               <motion.a
-                href="/resume.pdf"
+                href="/resume_v2.pdf"
                 download
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -705,7 +972,9 @@ const Index = () => {
             </div>
           </motion.section>
 
-          {/* Contact Section */}
+          {/* ─────────────────────────── */}
+          {/* CONTACT SECTION */}
+          {/* ─────────────────────────── */}
           <motion.section
             id="contact"
             initial="hidden"
