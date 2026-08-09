@@ -1,1049 +1,927 @@
-import {
-  Mail,
-  Phone,
-  Github,
-  Linkedin,
-  Download,
-  CheckCircle,
-  Beaker,
-} from "lucide-react";
-import ParticleBackground from "@/components/ParticleBackground";
+import { motion, useScroll, useTransform, useInView, useSpring, useMotionValue, useMotionValueEvent } from "framer-motion";
+import { useRef, useEffect, useState, useCallback } from "react";
+import { Mail, Phone, Github, Linkedin, ArrowRight, ArrowUpRight, ExternalLink, FileText } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import ProjectCard from "@/components/ProjectCard";
-import ExperienceCard from "@/components/ExperienceCard";
-import CertificationCard from "@/components/CertificationCard";
-import { motion } from "framer-motion";
-import {
-  fadeUp,
-  staggerContainer,
-  scaleUp,
-  reveal,
-} from "@/lib/animations";
+import HeroDeckScene from "@/components/HeroDeckScene";
+import SystemCapabilities from "@/components/SystemCapabilities";
+import ScrambleText from "@/components/ScrambleText";
+import { FlipText, StaggerSlideText, PerspectiveSweepText, SplitWordKineticText } from "@/components/HeadingAnimations";
+import SystemTerminalModal from "@/components/SystemTerminalModal";
+import HUDControls from "@/components/HUDControls";
+import SectionSpineNavigation from "@/components/SectionSpineNavigation";
+import Magnetic from "@/components/Magnetic";
+import CurveTransition from "@/components/CurveTransition";
+import CursorProjectPreview, { ProjectPreviewData } from "@/components/CursorProjectPreview";
+import HeaderNavigation from "@/components/HeaderNavigation";
+import { sound } from "@/utils/sound";
+import { useTheme } from "@/context/ThemeContext";
 
 // ─────────────────────────────────────
-// PROJECT DATA
+// ANIMATION VARIANTS
 // ─────────────────────────────────────
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
 
-interface ProjectData {
-  title: string;
-  status: string;
-  statusType: "active" | "development" | "complete" | "default";
-  description: string;
-  tags: string[];
-  techStack: string[];
-  liveUrl?: string;
-  githubUrl?: string;
-  demoPlaceholder?: boolean;
-  featured?: boolean;
-  priority: number;
-}
+const slideUpChild = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+  },
+};
 
-// Primary Featured Projects
-const featuredProjects: ProjectData[] = [
+const slideUpStagger = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.12 },
+  },
+};
+
+// ─────────────────────────────────────
+// DATA SETS
+// ─────────────────────────────────────
+const primaryProjects = [
   {
+    index: 0,
     title: "Guidon's Eye",
-    status: "Prototype Ready",
-    statusType: "active",
-    featured: true,
-    priority: 1,
-    description:
-      "Privacy-first productivity assistant that tracks active applications, provides context-aware nudges, and integrates with a conversational AI backend to boost focus and automation. Built as a lightweight desktop overlay for developers and knowledge workers seeking distraction-free productivity.",
-    tags: [
-      "Desktop HUD",
-      "Productivity",
-      "AI Assistant",
-      "Automation",
-      "Privacy-Focused",
-    ],
-    techStack: [
-      "Runtime: Electron (Chromium + Node.js)",
-      "Frontend: Vanilla HTML/CSS/JavaScript",
-      "Backend: Node.js (Main Process)",
-      "Database: MongoDB (Local Instance)",
-      "AI APIs: Google Gemini, Perplexity Sonar",
-      "HTTP Client: Axios with Circuit Breaker",
-      "Logging: Winston (JSON format)",
-    ],
-    githubUrl: "https://github.com/Keshav76315/guidons-eye",
+    category: "Desktop HUD & Automation",
+    status: "Prototype",
+    techStack: ["React 18", "Electron", "TypeScript", "Tailwind CSS"],
+    description: "Custom desktop HUD and productivity widget suite for tracking system performance and streamlining daily developer workflows.",
+    githubUrl: "https://github.com/Keshav76315",
   },
   {
+    index: 1,
     title: "turboSH",
+    category: "Security & Middleware",
     status: "Complete",
-    statusType: "complete",
-    featured: true,
-    priority: 2,
-    description:
-      "An AI‑powered intelligent middleware layer designed to optimize server performance and enhance security. It automatically schedules and rate-limits incoming requests, caches frequent responses, and utilizes machine learning models (Isolation Forest, SVM) to detect anomalies and mitigate threats in real-time without needing a GPU.",
-    tags: [
-      "Middleware",
-      "AI Security",
-      "Reverse Proxy",
-      "Machine Learning",
-      "Go",
-    ],
-    techStack: [
-      "Middleware: Go (net/http, gin)",
-      "Data Pipeline: Go + Python (pandas, numpy)",
-      "ML: Python (scikit-learn, ONNX)",
-      "Monitoring: Prometheus, Grafana",
-      "Deployment: Docker",
-    ],
-    githubUrl: "https://github.com/Keshav76315/turboSH",
+    techStack: ["Go (Golang)", "Gin", "ONNX Runtime", "Docker"],
+    description: "Go-based reverse proxy and security agent featuring shell command parsing, ONNX anomaly detection model integration, and rate-limiting.",
+    githubUrl: "https://github.com/Keshav76315",
   },
   {
+    index: 2,
     title: "LawBuddy AI",
+    category: "Legal Assistant & Local LLM",
     status: "Complete",
-    statusType: "complete",
-    featured: true,
-    priority: 3,
-    description:
-      "An intelligent legal assistant platform powered by a custom, locally-hosted Large Language Model built via fine-tuning — no external API calls, no cloud dependencies. LawBuddy runs entirely on-device for maximum privacy and data sovereignty, providing real-time legal analysis, AI-assisted document drafting, and full case management through a modern web interface.",
-    tags: [
-      "Local LLM",
-      "Ollama",
-      "Legal Tech",
-      "AI Assistant",
-      "Privacy-First",
-      "NLP",
-    ],
-    techStack: [
-      "AI: Custom Ollama-hosted Model (LawBuddy:latest)",
-      "Backend: Node.js, Express.js",
-      "Database: Innovative JSON file-based DB (zero setup)",
-      "Frontend: HTML5, CSS3, JavaScript",
-      "Auth: Express Sessions",
-    ],
-    githubUrl: "https://github.com/Keshav76315/LawBuddy",
+    techStack: ["Ollama", "Python", "FastAPI", "React", "TypeScript"],
+    description: "Legal query assistant utilizing local LLMs (via Ollama) to parse case documents and assist with legal research while keeping data private on-device.",
+    githubUrl: "https://github.com/Keshav76315",
   },
   {
+    index: 3,
     title: "Recommendation Engine",
+    category: "Machine Learning",
     status: "Complete",
-    statusType: "complete",
-    featured: true,
-    priority: 4,
-    description:
-      "A production-grade recommendation engine implementing collaborative filtering, content-based filtering, and hybrid approaches to deliver personalized suggestions. Designed as a modular ML pipeline with data preprocessing, model training, and real-time inference capabilities for scalable recommendation use cases.",
-    tags: [
-      "Machine Learning",
-      "Collaborative Filtering",
-      "Content-Based",
-      "Recommendation System",
-      "Data Pipeline",
-    ],
-    techStack: [
-      "Core: Python, Scikit-learn, Pandas, NumPy",
-      "Techniques: Collaborative Filtering, Content-Based Filtering",
-      "Processing: TF-IDF, Cosine Similarity",
-      "Evaluation: Precision, Recall, RMSE",
-    ],
-    githubUrl: "https://github.com/Keshav76315/recommendation-engine",
+    techStack: ["Python", "Scikit-Learn", "FastAPI", "PostgreSQL"],
+    description: "Machine learning recommendation system implementing collaborative and content-based filtering algorithms with FastAPI endpoint serving.",
+    githubUrl: "https://github.com/Keshav76315",
   },
 ];
 
-// Regular (non-featured) projects
-const regularProjects: ProjectData[] = [
+const secondaryProjects = [
   {
     title: "MedSafe",
-    status: "Prototype Ready",
-    statusType: "active",
-    priority: 5,
-    description:
-      "MedSafe is an AI-powered medication safety and verification platform designed to combat counterfeit medicines and prevent dangerous drug interactions. It enables patients, pharmacists, and healthcare providers to verify medication authenticity, analyze interaction risks, and access real-time safety intelligence.",
-    tags: ["AI", "OCR", "Drug Databases", "Web Platform", "Healthcare"],
-    techStack: [
-      "Frontend: React 18, TypeScript, TailwindCSS",
-      "UI: shadcn/ui, Recharts",
-      "Backend: PostgreSQL with RLS, Edge Functions",
-      "AI: Google Gemini 2.0 Flash",
-      "OCR: Tesseract.js",
-      "Auth: Email, Google OAuth, Phone OTP",
-    ],
-    liveUrl: "https://med-safe-1.lovable.app",
+    category: "Healthcare & OCR",
+    status: "Prototype",
+    description: "Medication safety tool combining Tesseract.js OCR for prescription parsing and Gemini AI for dosage guidelines.",
+    techStack: ["React 18", "TypeScript", "Gemini API", "Tesseract.js"],
+    liveUrl: "https://github.com/Keshav76315",
   },
   {
     title: "CodeChicks",
-    status: "Live",
-    statusType: "active",
-    priority: 6,
-    description:
-      "A full-stack developer productivity platform centered on real-time collaboration and community engagement. Features a polling-powered global chat system for seamless developer communication, a persistent floating timer widget for focus sessions, personalized dashboards with analytics, and multi-provider OAuth (Google & GitHub).",
-    tags: [
-      "Real-Time Chat",
-      "Polling",
-      "OAuth",
-      "Community Platform",
-      "Glassmorphism",
-    ],
-    techStack: [
-      "Backend: Python, FastAPI, Beanie (MongoDB ODM)",
-      "Real-Time: Polling",
-      "Auth: Authlib, Python-Jose (JWT), Passlib",
-      "Frontend: HTML5, CSS3 (Vanilla), Vanilla JavaScript",
-      "Database: MongoDB Atlas (Motor/Beanie)",
-      "Deployment: Vercel (Serverless), Netlify",
-    ],
-    liveUrl: "https://codechicks.vercel.app",
-  },
-  {
-    title: "Notes API",
+    category: "Web Application",
     status: "Complete",
-    statusType: "complete",
-    priority: 7,
-    description:
-      "RESTful Notes API built with Node.js and Express. Provides endpoints for creating, reading, updating, and deleting notes with MongoDB persistence. Demonstrates backend API development best practices including proper error handling, validation, and database integration.",
-    tags: ["REST API", "Backend", "Node.js", "MongoDB", "Express.js"],
-    techStack: [
-      "Runtime: Node.js",
-      "Framework: Express.js",
-      "Database: MongoDB",
-      "HTTP Requests: Axios/Fetch",
-    ],
-    githubUrl: "https://github.com/Keshav76315/notes-api",
+    description: "Full-stack community platform with real-time polling, productivity timers, and user authentication.",
+    techStack: ["FastAPI", "Python", "MongoDB", "React"],
+    liveUrl: "https://github.com/Keshav76315",
   },
-];
-
-// Experimental Models (secondary subsection)
-const experimentalProjects: ProjectData[] = [
   {
-    title: "TensorFlow Multi-Model AI Suite",
-    status: "Active Development",
-    statusType: "development",
-    priority: 10,
-    description:
-      "A continuously expanding library of production-ready machine learning models spanning Computer Vision, NLP, and Predictive Analytics. Features diverse implementations from CNNs and BiLSTMs to advanced Unsupervised Learning algorithms.",
-    tags: [
-      "TensorFlow",
-      "Deep Learning",
-      "Computer Vision",
-      "NLP",
-      "Unsupervised Learning",
-    ],
-    techStack: [
-      "Core: TensorFlow 2.x, Keras, Scikit-learn",
-      "Architectures: CNN, BiLSTM, RNN, Autoencoders",
-      "Techniques: Transfer Learning, Tokenization, Clustering (PCA/t-SNE)",
-      "Processing: Pandas, OpenCV, NumPy",
-    ],
-    githubUrl: "https://github.com/Keshav76315/ML-models",
+    title: "TensorFlow Multi-Model Suite",
+    category: "Deep Learning",
+    status: "Research",
+    description: "Collection of deep learning models including CNN image classifiers, BiLSTM text sequences, and autoencoders.",
+    techStack: ["TensorFlow 2.x", "Keras", "OpenCV", "Python"],
+    githubUrl: "https://github.com/Keshav76315",
+  },
+  {
+    title: "Notes REST API",
+    category: "Backend API",
+    status: "Complete",
+    description: "RESTful backend API providing CRUD operations, request validation, and MongoDB data persistence.",
+    techStack: ["Node.js", "Express.js", "MongoDB", "Mongoose"],
+    githubUrl: "https://github.com/Keshav76315",
   },
 ];
 
-// ─────────────────────────────────────
-// SKILLS DATA
-// ─────────────────────────────────────
-
-const frontendSkills = [
-  "React / Next.js",
-  "TypeScript",
-  "Tailwind CSS",
-  "Framer Motion",
-  "Shadcn UI",
-  "HTML5 / CSS3",
+const experiences = [
+  {
+    role: "Architectural Intern",
+    company: "Studio Eclecea",
+    period: "Apr 2026 – Present",
+    isActive: true,
+    description: "Execution-level architectural drafting for residential and interior design projects.",
+    scope: ["Floor Plans", "Working Drawings", "MEP Layouts", "Site Inspections"],
+  },
+  {
+    role: "Freelance Full-Stack Developer",
+    company: "Green LeafX",
+    period: "Client Project",
+    isActive: false,
+    description: "Complete web application for sustainability education with automated YouTube feeds and course modules.",
+    scope: ["Full-Stack Development", "YouTube API v3", "Cloud Deployment"],
+  },
+  {
+    role: "Applied ML Trainee",
+    company: "Unified Mentor",
+    period: "2025",
+    isActive: false,
+    description: "Intensive training program covering supervised/unsupervised learning, model evaluation metrics, and real-world dataset analysis.",
+    scope: ["Scikit-learn", "Pandas", "Model Evaluation"],
+  },
 ];
-
-const backendSkills = [
-  "Node.js (Express)",
-  "Python (FastAPI / Flask)",
-  "Go (Golang)",
-  "MongoDB",
-  "PostgreSQL",
-  "REST / GraphQL APIs",
-  "Auth (JWT / OAuth)",
-];
-
-const toolsSkills = [
-  "Git & GitHub",
-  "Docker",
-  "AWS",
-  "Postman",
-  "Prometheus & Grafana",
-  "Vercel / Netlify",
-  "Linux / WSL",
-  "Google Colab",
-];
-
-const aimlSkills = [
-  "TensorFlow / Keras",
-  "Scikit-learn / ONNX",
-  "OpenCV",
-  "NLP (BiLSTM / Transformers)",
-  "Generative AI (LLMs)",
-  "Data Analysis (Pandas/NumPy)",
-];
-
-const architectureSkills = [
-  "GstarCAD",
-  "SketchUp",
-  "Working Drawings",
-  "Construction Documentation",
-  "Site Inspection",
-];
-
-const designSkills = [
-  "Graphic Design",
-  "UI Layouting",
-  "Visual Communication",
-  "Interior Visualization",
-];
-
-// ─────────────────────────────────────
-// CERTIFICATIONS DATA
-// ─────────────────────────────────────
 
 const certifications = [
   {
+    title: "IIT Madras — BS Degree in Data Science & Applications",
+    issuer: "IIT Madras",
+    date: "Enrolled",
+    url: "https://study.iitm.ac.in/ds/",
+  },
+  {
     title: "IBM Data Science Professional Certificate",
-    issuer: "IBM via Coursera",
-    date: "February 2026",
-    description:
-      "Comprehensive 12-course certificate covering the entire data science lifecycle — Python, SQL, data analysis, machine learning, deep learning, and data visualization with hands-on capstone projects.",
-    credentialUrl: "/ds-certificate.pdf",
+    issuer: "IBM / Coursera",
+    date: "Certified",
+    url: "/ds-certificate.pdf",
   },
   {
-    title: "IBM AI Engineering Professional Certificate",
-    issuer: "IBM via Coursera",
-    date: "April 2026",
-    description:
-      "Rigorous training in architecting and deploying AI solutions, emphasizing deep learning frameworks, model optimization, and scalable MLOps practices for production-ready intelligent systems.",
-    credentialUrl: "/AI-eng-certificate.pdf",
+    title: "IBM Full Stack Software Developer Professional Certificate",
+    issuer: "IBM / Coursera",
+    date: "Certified",
+    url: "/IBM_SWE_Certificate.png",
   },
   {
-    title: "AWS Cloud Practitioner Essentials",
-    issuer: "Amazon Web Services via Coursera",
-    date: "March 2026",
-    description:
-      "Core cloud concepts, AWS services, security, architecture, pricing, and support. Foundational knowledge of compute, storage, networking, and database services.",
-    credentialUrl: "/AWS-Certificate.pdf",
+    title: "AWS Academy Graduate — AWS Academy Cloud Foundations",
+    issuer: "AWS Academy",
+    date: "Certified",
+    url: "/AWS-Certificate.pdf",
   },
   {
-    title: "Applied Software Engineering Fundamentals",
-    issuer: "IBM via Coursera",
-    date: "March 2026",
-    description:
-      "5-course specialization covering SDLC, Git & GitHub workflows, Linux & shell scripting, Python for AI & data science, and building AI applications with Flask.",
-    credentialUrl: "/SEF-certificate.pdf",
+    title: "AI Engineer Path — Building LLM Applications",
+    issuer: "Scrimba",
+    date: "Certified",
+    url: "/AI-eng-certificate.pdf",
+  },
+  {
+    title: "Software Engineering Foundations",
+    issuer: "Software Engineering Foundations",
+    date: "Certified",
+    url: "/SEF-certificate.pdf",
   },
 ];
 
 // ─────────────────────────────────────
-// FREELANCE SERVICES DATA
+// REVEAL TEXT COMPONENT
 // ─────────────────────────────────────
+const RevealText = ({ children, className }: { children: string; className?: string }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
-const availableForServices = [
-  "Custom websites & landing pages (React, HTML, CSS, Tailwind)",
-  "Full-stack web applications (MERN stack: React, Node.js, Express, MongoDB)",
-  "Python automation scripts & data processing tools",
-  "API integration & backend development (Node.js, Express)",
-  "UI/UX implementation & responsive design",
-];
-
-// ─────────────────────────────────────
-// COMPONENT
-// ─────────────────────────────────────
-
-const Index = () => {
-  const allFeatured = [...featuredProjects].sort((a, b) => a.priority - b.priority);
-  const allRegular = [...regularProjects].sort((a, b) => a.priority - b.priority);
-  const totalProjectCount = allFeatured.length + allRegular.length + experimentalProjects.length;
+  const words = children.split(" ");
 
   return (
-    <div className="min-h-screen relative">
-      <ParticleBackground />
+    <motion.p ref={ref} className={className}>
+      {words.map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden mr-[0.25em] align-top">
+          <motion.span
+            className="inline-block"
+            initial={{ y: "100%", opacity: 0 }}
+            animate={isInView ? { y: "0%", opacity: 1 } : { y: "100%", opacity: 0 }}
+            transition={{
+              duration: 0.6,
+              delay: i * 0.02,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          >
+            {word}
+          </motion.span>
+        </span>
+      ))}
+    </motion.p>
+  );
+};
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
-        {/* ═══════════════════════════════ */}
-        {/* HERO SECTION */}
-        {/* ═══════════════════════════════ */}
-        <motion.header
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="flex flex-col justify-center min-h-[60vh] mb-20 mt-10"
-        >
-          <div className="flex justify-between items-start mb-20">
-            <motion.div variants={scaleUp}>
-              <span className="text-sm font-mono tracking-widest uppercase text-muted-foreground">
-                Portfolio
+// ─────────────────────────────────────
+// SECTION REVEAL HEADER COMPONENT
+// ─────────────────────────────────────
+const SectionReveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// ─────────────────────────────────────
+// MAIN PAGE COMPONENT
+// ─────────────────────────────────────
+export const Index = () => {
+  const [cliOpen, setCliOpen] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
+  // Shortcut key listener for CLI ~ button
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "`" || e.key === "~") {
+        e.preventDefault();
+        sound.playClick();
+        setCliOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Track scroll for progress indicator
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+
+  const [activePreview, setActivePreview] = useState<ProjectPreviewData | null>(null);
+
+  // Clear hover preview state on scroll to prevent stuck CSS hover glitch
+  useEffect(() => {
+    const handleScroll = () => {
+      setActivePreview(null);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div
+      className={`min-h-screen font-sans relative transition-colors duration-400 ${
+        isDark ? "bg-[#141416] text-[#F4F4F3]" : "bg-[#F4F4F3] text-[#1C1D20]"
+      }`}
+    >
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2px] bg-[#455CE9] z-[60] origin-left"
+        style={{ scaleX }}
+      />
+
+      <HeaderNavigation />
+      <CursorProjectPreview activeProject={activePreview} />
+      <SectionSpineNavigation />
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* DENNIS SNELLENBERG HERO CANVAS                                 */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <HeroDeckScene />
+
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* ABOUT — DENNIS SNELLENBERG EDITORIAL PARAGRAPH                */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <section
+        id="about"
+        className={`relative py-28 sm:py-36 border-t transition-colors duration-400 ${
+          isDark ? "bg-[#141416] text-[#F4F4F3] border-[#27272A]" : "bg-[#F4F4F3] text-[#1C1D20] border-[#E3E3E3]"
+        }`}
+      >
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            
+            {/* Editorial Paragraph */}
+            <div className="lg:col-span-8 space-y-8">
+              <RevealText className={`font-sans font-light text-2xl sm:text-4xl lg:text-[2.75rem] leading-[1.35] ${
+                isDark ? "text-[#F4F4F3]" : "text-[#1C1D20]"
+              }`}>
+                Helping brands and technical teams build zero-bloat digital infrastructure. Full-stack developer and AI system builder with real-world experience across high-throughput Go backends, sovereign local LLMs, and CAD drafting.
+              </RevealText>
+              
+              <p className={`font-sans text-sm max-w-xl leading-relaxed ${
+                isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/70"
+              }`}>
+                The combination of my passion for software engineering, applied machine learning, and architectural spatial discipline positions me in a unique place in the digital development world.
+              </p>
+            </div>
+
+            {/* Floating Circular Magnetic Buttons ("About me" & "Resume (PDF)") */}
+            <div className="lg:col-span-4 flex flex-wrap items-center justify-start lg:justify-end gap-4">
+              <Magnetic strength={0.4}>
+                <a
+                  href="#contact"
+                  className={`w-28 h-28 sm:w-36 sm:h-36 rounded-full font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center shadow-2xl hover:bg-[#455CE9] transition-colors duration-300 border group cursor-pointer ${
+                    isDark ? "bg-[#27272A] text-white border-white/10" : "bg-[#1C1D20] text-white border-white/10"
+                  }`}
+                >
+                  <span className="group-hover:scale-110 transition-transform">About me</span>
+                </a>
+              </Magnetic>
+
+              <Magnetic strength={0.4}>
+                <a
+                  href="/Resume.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-[#455CE9] text-white font-mono text-xs font-bold uppercase tracking-wider flex flex-col items-center justify-center shadow-2xl hover:scale-105 transition-transform duration-300 border border-white/20 group cursor-pointer text-center p-2"
+                >
+                  <span className="group-hover:scale-110 transition-transform">Resume ↗</span>
+                </a>
+              </Magnetic>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* SELECTED WORK — DENNIS SNELLENBERG MINIMAL LIST ROWS           */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <section
+        id="work"
+        className={`relative py-28 sm:py-36 border-t transition-colors duration-400 ${
+          isDark ? "bg-[#141416] text-[#F4F4F3] border-[#27272A]" : "bg-[#F4F4F3] text-[#1C1D20] border-[#E3E3E3]"
+        }`}
+      >
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16">
+          
+          {/* Section Header */}
+          <div className={`flex flex-col sm:flex-row sm:items-end justify-between mb-16 border-b pb-8 ${
+            isDark ? "border-[#27272A]" : "border-[#E3E3E3]"
+          }`}>
+            <SectionReveal>
+              <span className="font-mono text-xs text-[#455CE9] uppercase tracking-[0.2em] block mb-3 font-bold">
+                03 // RECENT WORK
               </span>
-            </motion.div>
-            <motion.div variants={scaleUp}>
-              <Navigation />
-            </motion.div>
+              <h2 className="font-sans font-bold text-4xl sm:text-6xl uppercase tracking-tight">
+                Work
+              </h2>
+            </SectionReveal>
+            <SectionReveal delay={0.2}>
+              <span className={`font-mono text-xs mt-4 sm:mt-0 font-semibold ${isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/60"}`}>
+                {primaryProjects.length} Selected Projects
+              </span>
+            </SectionReveal>
           </div>
 
-          <div className="flex flex-col gap-0 select-none">
-            {/* First Name */}
-            <div className="overflow-hidden">
-              <motion.h1
-                variants={reveal}
-                className="text-[12vw] leading-[0.9] font-black tracking-tighter uppercase text-foreground/90 mix-blend-difference"
-              >
-                Keshav
-              </motion.h1>
-            </div>
-
-            {/* Last Name & Subtitle */}
-            <div className="flex flex-col md:flex-row md:items-start justify-between gap-8">
-              <div className="overflow-hidden">
-                <motion.h1
-                  variants={reveal}
-                  className="text-[12vw] leading-[0.9] font-black tracking-tighter uppercase text-foreground/10"
-                >
-                  Ghai
-                </motion.h1>
-              </div>
-
-              <motion.div
-                variants={fadeUp}
-                className="md:max-w-md mt-4 md:mt-10 mx-1"
-              >
-                <p className="text-xl md:text-2xl font-light text-secondary-foreground leading-relaxed">
-                  Software Engineer, AI Builder & Technical Designer. <br />
-                  <span className="opacity-60">
-                    Crafting digital experiences that merge logic with design.
-                  </span>
-                </p>
-              </motion.div>
-            </div>
-          </div>
-        </motion.header>
-
-        {/* ═══════════════════════════════ */}
-        {/* MAIN SECTIONS */}
-        {/* ═══════════════════════════════ */}
-        <main className="space-y-16">
-          {/* ─────────────────────────── */}
-          {/* ABOUT SECTION */}
-          {/* ─────────────────────────── */}
-          <motion.section
-            id="about"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-            className="w-full"
-          >
-            <div className="glass-card p-8 lg:p-10">
-              <h2 className="section-title mb-6">About</h2>
-              <p className="text-secondary-foreground leading-relaxed text-lg max-w-4xl">
-                Software engineer with hands-on experience across full-stack development, AI/ML, automation, and technical design workflows. Currently pursuing a BS in Data Science and Applications at IIT Madras while working in real-world technical environments spanning software systems and architectural execution. Strong interest in building scalable products, intelligent systems, and practical automation solutions.
-              </p>
-
-              <div className="mt-10">
-                <h3 className="section-subtitle mb-5">Current Focus</h3>
-                <ul className="flex flex-wrap gap-4 text-secondary-foreground">
-                  <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
-                    <span className="w-2 h-2 rounded-full bg-accent" />
-                    Delivering high-quality freelance projects
-                  </li>
-                  <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
-                    <span className="w-2 h-2 rounded-full bg-accent" />
-                    Building SaaS products
-                  </li>
-                  <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
-                    <span className="w-2 h-2 rounded-full bg-accent" />
-                    Integrating AI into web workflows
-                  </li>
-                  <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
-                    <span className="w-2 h-2 rounded-full bg-accent" />
-                    Technical design & architectural execution
-                  </li>
-                  <li className="flex items-center gap-3 bg-secondary/30 px-4 py-2 rounded-lg border border-border/50">
-                    <span className="w-2 h-2 rounded-full bg-accent" />
-                    Advanced Data Structures & System Design
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </motion.section>
-
-          {/* ─────────────────────────── */}
-          {/* PROJECTS SECTION */}
-          {/* ─────────────────────────── */}
-          <motion.section
-            id="projects"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="w-full"
-          >
-            <div className="flex items-end justify-between mb-10">
-              <div>
-                <motion.h2
-                  variants={fadeUp}
-                  className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground/10 leading-none"
-                >
-                  My
-                </motion.h2>
-                <motion.h2
-                  variants={fadeUp}
-                  className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-none"
-                >
-                  Projects
-                </motion.h2>
-                <motion.div
-                  variants={fadeUp}
-                  className="w-24 h-2 bg-accent mt-6"
-                />
-              </div>
-              <motion.span
-                variants={fadeUp}
-                className="text-sm text-muted-foreground mono hidden md:block"
-              >
-                {totalProjectCount} Projects
-              </motion.span>
-            </div>
-
-            {/* Featured Projects */}
-            <motion.div
-              variants={staggerContainer}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6"
-            >
-              {allFeatured.map((project, index) => (
-                <motion.div
+          {/* Project List Rows */}
+          <div className={`space-y-0 border-b ${isDark ? "border-[#27272A]" : "border-[#E3E3E3]"}`}>
+            {primaryProjects.map((project, idx) => {
+              const isHovered = activePreview?.title === project.title;
+              return (
+                <div
                   key={project.title}
-                  variants={fadeUp}
-                  className={project.featured ? "md:col-span-2" : ""}
+                  data-cursor-label="View"
+                  data-cursor-title={project.title}
+                  onMouseEnter={() =>
+                    setActivePreview({
+                      title: project.title,
+                      category: project.category,
+                    })
+                  }
+                  onMouseLeave={() => setActivePreview(null)}
                 >
-                  <div className="relative group">
-                    <span className="absolute -top-8 -left-2 text-7xl font-black text-foreground/5 pointer-events-none select-none z-0 hidden md:block">
-                      {(index + 1).toString().padStart(2, "0")}
+                  <ProjectItem project={project} idx={idx} isHovered={isHovered} />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* CAPABILITIES — INTERACTIVE SYSTEM DISCIPLINES & CONSOLE        */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <SystemCapabilities onHoverCapability={setActivePreview} />
+
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* EXPERIMENTS & SECONDARY PROJECTS                              */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <section
+        id="experiments"
+        className={`relative py-28 sm:py-36 border-t transition-colors duration-400 ${
+          isDark ? "bg-[#141416] text-[#F4F4F3] border-[#27272A]" : "bg-[#F4F4F3] text-[#1C1D20] border-[#E3E3E3]"
+        }`}
+      >
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16">
+          <div className={`flex flex-col sm:flex-row sm:items-end justify-between mb-16 border-b pb-8 ${
+            isDark ? "border-[#27272A]" : "border-[#E3E3E3]"
+          }`}>
+            <SectionReveal>
+              <span className="font-mono text-xs text-[#455CE9] uppercase tracking-[0.2em] block mb-3 font-bold">
+                05 // LAB &amp; EXPERIMENTS
+              </span>
+              <h2 className="font-sans font-bold text-4xl sm:text-6xl uppercase tracking-tight">
+                Lab
+              </h2>
+            </SectionReveal>
+          </div>
+
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={slideUpStagger}
+          >
+            {secondaryProjects.map((exp) => (
+              <motion.div
+                key={exp.title}
+                data-cursor-label="Source"
+                data-cursor-title={exp.title}
+                variants={slideUpChild}
+                whileHover={{ x: 6 }}
+                transition={{ duration: 0.3 }}
+                onMouseEnter={() => setActivePreview({ title: exp.title, label: "Source" })}
+                onMouseLeave={() => setActivePreview(null)}
+                className={`group border-t pt-6 flex flex-col justify-between space-y-6 ${
+                  isDark ? "border-[#27272A]" : "border-[#E3E3E3]"
+                }`}
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between font-mono text-[11px]">
+                    <span className="text-[#455CE9] font-bold uppercase tracking-wider">
+                      {exp.category}
                     </span>
-                    <ProjectCard {...project} />
+                    <span className={isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/60"}>{exp.status}</span>
                   </div>
-                </motion.div>
-              ))}
-            </motion.div>
 
-            {/* Regular Projects */}
-            {allRegular.length > 0 && (
-              <motion.div
-                variants={staggerContainer}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6"
-              >
-                {allRegular.map((project, index) => (
-                  <motion.div
-                    key={project.title}
-                    variants={fadeUp}
-                  >
-                    <div className="relative group">
-                      <span className="absolute -top-8 -left-2 text-7xl font-black text-foreground/5 pointer-events-none select-none z-0 hidden md:block">
-                        {(allFeatured.length + index + 1).toString().padStart(2, "0")}
+                  <h4 className="font-sans font-bold text-2xl group-hover:text-[#455CE9] transition-colors duration-300">
+                    {exp.title}
+                  </h4>
+
+                  <p className={`font-sans text-sm leading-relaxed ${isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/70"}`}>
+                    {exp.description}
+                  </p>
+                </div>
+
+                <div className="space-y-4 pt-2">
+                  <div className="flex flex-wrap gap-2 font-mono text-xs">
+                    {exp.techStack.map((tech) => (
+                      <span
+                        key={tech}
+                        className={`px-2.5 py-1 border rounded-sm text-[11px] font-semibold ${
+                          isDark ? "bg-[#1F1F23] border-[#27272A] text-white" : "bg-white border-[#E3E3E3] text-[#1C1D20]"
+                        }`}
+                      >
+                        {tech}
                       </span>
-                      <ProjectCard {...project} />
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
+                    ))}
+                  </div>
 
-            {/* Experimental Models Subsection */}
-            {experimentalProjects.length > 0 && (
+                  <div className="flex items-center gap-5 pt-1">
+                    {exp.githubUrl && (
+                      <a
+                        href={exp.githubUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hover-underline inline-flex items-center gap-1.5 font-mono text-xs uppercase hover:text-[#455CE9] transition-colors font-bold"
+                      >
+                        <Github className="w-3.5 h-3.5" />
+                        <span>Source Code</span>
+                        <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      </a>
+                    )}
+                    {exp.liveUrl && (
+                      <a
+                        href={exp.liveUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hover-underline inline-flex items-center gap-1.5 font-mono text-xs uppercase hover:text-[#455CE9] transition-colors font-bold"
+                      >
+                        <span>Live Preview</span>
+                        <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* EXPERIENCE — TIMELINE                                         */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <section
+        id="experience"
+        className={`relative py-28 sm:py-36 border-t transition-colors duration-400 ${
+          isDark ? "bg-[#141416] text-[#F4F4F3] border-[#27272A]" : "bg-[#F4F4F3] text-[#1C1D20] border-[#E3E3E3]"
+        }`}
+      >
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16">
+          <SectionReveal>
+            <span className="font-mono text-xs text-[#455CE9] uppercase tracking-[0.2em] block mb-3 font-bold">
+              06 // TRACK RECORD
+            </span>
+            <h2 className="font-sans font-bold text-4xl sm:text-6xl uppercase tracking-tight mb-16">
+              Experience
+            </h2>
+          </SectionReveal>
+
+          <motion.div
+            className="space-y-0"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={slideUpStagger}
+          >
+            {experiences.map((exp, idx) => (
               <motion.div
-                variants={fadeUp}
-                className="mt-12"
+                key={exp.company}
+                data-cursor-label="Details"
+                data-cursor-title={exp.company}
+                whileHover={{ x: 6 }}
+                transition={{ duration: 0.3 }}
+                onMouseEnter={() => setActivePreview({ title: exp.company, label: "Details" })}
+                onMouseLeave={() => setActivePreview(null)}
+                className={`group py-10 sm:py-14 border-t transition-colors duration-500 px-4 -mx-4 rounded-lg ${
+                  isDark ? "border-[#27272A] hover:bg-[#1F1F23]" : "border-[#E3E3E3] hover:bg-white/60"
+                }`}
+                variants={slideUpChild}
               >
-                <div className="flex items-center gap-3 mb-6">
-                  <Beaker className="w-4 h-4 text-muted-foreground" />
-                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                    Experimental Models
-                  </h3>
-                  <div className="flex-1 h-px bg-border/30" />
-                </div>
-                <div className="grid grid-cols-1 gap-5">
-                  {experimentalProjects.map((project) => (
-                    <motion.div key={project.title} variants={fadeUp}>
-                      <div className="experimental-card p-5 lg:p-6">
-                        <div className="flex items-start justify-between gap-4 mb-3">
-                          <div className="flex items-center gap-2">
-                            <h4 className="text-base font-semibold">{project.title}</h4>
-                          </div>
-                          <span className="status-badge bg-primary/20 text-primary text-xs">
-                            {project.status}
-                          </span>
-                        </div>
-                        <p className="text-sm text-secondary-foreground leading-relaxed mb-4">
-                          {project.description}
-                        </p>
-                        <div className="flex flex-wrap gap-1.5 mb-4">
-                          {project.tags.map((tag, idx) => (
-                            <span key={idx} className="skill-tag text-xs px-2 py-1">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                        {project.githubUrl && (
-                          <a
-                            href={project.githubUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="btn-ghost text-xs"
-                          >
-                            <Github className="w-3.5 h-3.5" />
-                            View Source Code
-                          </a>
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
+                  <div className="lg:col-span-4 flex items-start justify-between lg:flex-col lg:gap-2">
+                    <div>
+                      <h4 className="font-sans font-bold text-xl sm:text-2xl group-hover:text-[#455CE9] transition-colors">
+                        {exp.role}
+                      </h4>
+                      <span className="font-mono text-xs text-[#455CE9] font-semibold">{exp.company}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className={`font-mono text-xs ${isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/60"}`}>{exp.period}</span>
+                      {exp.isActive && (
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-5">
+                    <p className={`font-sans text-sm leading-relaxed ${isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/70"}`}>
+                      {exp.description}
+                    </p>
+                  </div>
+
+                  <div className="lg:col-span-3 flex flex-wrap gap-2">
+                    {exp.scope.map((item) => (
+                      <span
+                        key={item}
+                        className={`font-mono text-[11px] px-3 py-1.5 border rounded-sm ${
+                          isDark ? "bg-[#1F1F23] border-[#27272A] text-white" : "bg-white border-[#E3E3E3] text-[#1C1D20]"
+                        }`}
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
-            )}
-          </motion.section>
+            ))}
+            <div className={`border-t ${isDark ? "border-[#27272A]" : "border-[#E3E3E3]"}`} />
+          </motion.div>
+        </div>
+      </section>
 
-          {/* ─────────────────────────── */}
-          {/* PROFESSIONAL EXPERIENCE */}
-          {/* ─────────────────────────── */}
-          <motion.section
-            id="experience"
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* CERTIFICATIONS                                                */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <section
+        id="certifications"
+        className={`relative py-28 sm:py-36 border-t transition-colors duration-400 ${
+          isDark ? "bg-[#141416] text-[#F4F4F3] border-[#27272A]" : "bg-[#F4F4F3] text-[#1C1D20] border-[#E3E3E3]"
+        }`}
+      >
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16">
+          <SectionReveal>
+            <span className="font-mono text-xs text-[#455CE9] uppercase tracking-[0.2em] block mb-3 font-bold">
+              07 // CREDENTIALS
+            </span>
+            <h2 className="font-sans font-bold text-4xl sm:text-6xl uppercase tracking-tight mb-16">
+              Certifications
+            </h2>
+          </SectionReveal>
+
+          <motion.div
+            className="space-y-0"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="w-full"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={slideUpStagger}
           >
-            <div className="flex items-end justify-between mb-10">
-              <div>
-                <motion.h2
-                  variants={fadeUp}
-                  className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground/10 leading-none"
-                >
-                  Professional
-                </motion.h2>
-                <motion.h2
-                  variants={fadeUp}
-                  className="text-6xl md:text-8xl font-black uppercase tracking-tighter text-foreground leading-none"
-                >
-                  Experience
-                </motion.h2>
-                <motion.div
-                  variants={fadeUp}
-                  className="w-24 h-2 bg-accent mt-6"
-                />
-              </div>
-              <motion.span
-                variants={fadeUp}
-                className="text-sm text-muted-foreground mono hidden md:block"
-              >
-                3 Roles
-              </motion.span>
-            </div>
-
-            <motion.div
-              variants={staggerContainer}
-              className="space-y-8"
-            >
-              <ExperienceCard
-                company="Studio Eclecea"
-                role="Architectural Intern"
-                period="Apr 2026 – Present"
-                status="active"
-                statusLabel="Active"
-                description="Working on residential and interior design projects involving architectural drafting and execution-level detailing. Responsible for floor plans, electrical/plumbing/sanitary layouts, furniture detailing, front elevations, and site inspection reporting while collaborating directly on design refinements."
-                responsibilities={[
-                  "Floor Plans",
-                  "Working Drawings",
-                  "Electrical Layouts",
-                  "Plumbing Layouts",
-                  "Sanitary Detailing",
-                  "Furniture Elevations",
-                  "Front Elevations",
-                  "Interior Planning",
-                  "Site Inspections",
-                ]}
-                tools={[
-                  "GstarCAD",
-                  "SketchUp",
-                  "Construction Documentation",
-                  "Working Drawings",
-                  "Site Coordination",
-                ]}
-                isFirst
-              />
-
-              <ExperienceCard
-                company="Green LeafX"
-                role="Freelance Full-Stack Developer"
-                period="Client Project"
-                status="client"
-                statusLabel="Client Work"
-                description="Built a comprehensive educational platform dedicated to promoting sustainability and eco-conscious living. Full-stack freelance web application serving as a central hub for environmental education, aggregating content from various sources to provide a seamless learning experience with automated video feeds, structured course modules, and community notes."
-                responsibilities={[
-                  "End-to-end Full Stack Development",
-                  "Cloud Production Migration",
-                  "API Optimization",
-                  "Eco-Brand UI/UX Design",
-                ]}
-                tools={[
-                  "Python",
-                  "Flask",
-                  "Jinja2",
-                  "SQLite",
-                  "HTML5",
-                  "CSS3",
-                  "JavaScript",
-                  "YouTube Data API v3",
-                  "PythonAnywhere",
-                ]}
-              />
-
-              <ExperienceCard
-                company="Unified Mentor"
-                role="Applied Machine Learning Trainee"
-                period="2025"
-                status="completed"
-                statusLabel="Completed"
-                description="Completed a structured applied machine learning training program covering supervised and unsupervised learning, model evaluation, and real-world dataset analysis. Built and evaluated multiple ML models across classification, regression, and clustering tasks."
-                tools={[
-                  "Python",
-                  "Scikit-learn",
-                  "Pandas",
-                  "NumPy",
-                  "Matplotlib",
-                ]}
-                isLast
-              />
-            </motion.div>
-          </motion.section>
-
-          {/* ─────────────────────────── */}
-          {/* FREELANCE SECTION */}
-          {/* ─────────────────────────── */}
-          <motion.section
-            id="freelance"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-            className="w-full"
-          >
-            <div className="glass-card p-8 lg:p-10">
-              <div className="flex items-center gap-3 mb-6">
-                <CheckCircle className="w-5 h-5 text-accent" />
-                <h2 className="section-title">Available for Freelance</h2>
-              </div>
-              <p className="text-secondary-foreground mb-6 text-lg max-w-3xl">
-                I take on freelance projects ranging from landing pages to full-stack applications. Here's what I can help with:
-              </p>
-              <ul className="space-y-3 text-secondary-foreground mb-6">
-                {availableForServices.map((service, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <span className="text-accent font-bold mt-0.5">✓</span>
-                    {service}
-                  </li>
-                ))}
-              </ul>
-              <p className="text-sm text-muted-foreground border-t border-border/50 pt-4">
-                <strong className="text-foreground">
-                  Typical project turnaround:
-                </strong>{" "}
-                3–7 days for small scopes | Flexible rates for quick
-                turnarounds
-              </p>
-            </div>
-          </motion.section>
-
-          {/* ─────────────────────────── */}
-          {/* CERTIFICATIONS SECTION */}
-          {/* ─────────────────────────── */}
-          <motion.section
-            id="certifications"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="w-full"
-          >
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="section-title">Certifications</h2>
-              <motion.span
-                variants={fadeUp}
-                className="text-sm text-muted-foreground mono hidden md:block"
-              >
-                {certifications.length}{" "}
-                {certifications.length === 1 ? "Certificate" : "Certificates"}
-              </motion.span>
-            </div>
-
-            <div className="space-y-3">
-              {certifications.map((cert) => (
-                <CertificationCard key={cert.title} {...cert} />
-              ))}
-            </div>
-          </motion.section>
-
-          {/* ─────────────────────────── */}
-          {/* SKILLS SECTION */}
-          {/* ─────────────────────────── */}
-          <motion.section
-            id="skills"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="w-full"
-          >
-            <div className="glass-card p-8 lg:p-10">
-              <motion.h2 variants={fadeUp} className="section-title mb-6">
-                Skills & Tech
-              </motion.h2>
-
-              <div className="space-y-6">
-                {/* Frontend */}
-                <div>
-                  <motion.h3
-                    variants={fadeUp}
-                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
-                  >
-                    Frontend
-                  </motion.h3>
-                  <motion.div
-                    variants={staggerContainer}
-                    className="flex flex-wrap gap-3"
-                  >
-                    {frontendSkills.map((skill) => (
-                      <motion.span
-                        key={skill}
-                        variants={scaleUp}
-                        whileHover={{ scale: 1.1 }}
-                        className="skill-tag text-base px-4 py-2"
-                      >
-                        {skill}
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                </div>
-
-                {/* Backend */}
-                <div>
-                  <motion.h3
-                    variants={fadeUp}
-                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
-                  >
-                    Backend
-                  </motion.h3>
-                  <motion.div
-                    variants={staggerContainer}
-                    className="flex flex-wrap gap-3"
-                  >
-                    {backendSkills.map((skill) => (
-                      <motion.span
-                        key={skill}
-                        variants={scaleUp}
-                        whileHover={{ scale: 1.1 }}
-                        className="skill-tag text-base px-4 py-2"
-                      >
-                        {skill}
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                </div>
-
-                {/* Tools & Languages */}
-                <div>
-                  <motion.h3
-                    variants={fadeUp}
-                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
-                  >
-                    Tools & Languages
-                  </motion.h3>
-                  <motion.div
-                    variants={staggerContainer}
-                    className="flex flex-wrap gap-3"
-                  >
-                    {toolsSkills.map((skill) => (
-                      <motion.span
-                        key={skill}
-                        variants={scaleUp}
-                        whileHover={{ scale: 1.1 }}
-                        className="skill-tag text-base px-4 py-2"
-                      >
-                        {skill}
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                </div>
-
-                {/* AI / ML */}
-                <div>
-                  <motion.h3
-                    variants={fadeUp}
-                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
-                  >
-                    AI / ML
-                  </motion.h3>
-                  <motion.div
-                    variants={staggerContainer}
-                    className="flex flex-wrap gap-3"
-                  >
-                    {aimlSkills.map((skill) => (
-                      <motion.span
-                        key={skill}
-                        variants={scaleUp}
-                        whileHover={{ scale: 1.1 }}
-                        className="skill-tag text-base px-4 py-2"
-                      >
-                        {skill}
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                </div>
-
-                {/* Architecture & Drafting */}
-                <div>
-                  <motion.h3
-                    variants={fadeUp}
-                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
-                  >
-                    Architecture & Drafting
-                  </motion.h3>
-                  <motion.div
-                    variants={staggerContainer}
-                    className="flex flex-wrap gap-3"
-                  >
-                    {architectureSkills.map((skill) => (
-                      <motion.span
-                        key={skill}
-                        variants={scaleUp}
-                        whileHover={{ scale: 1.1 }}
-                        className="skill-tag text-base px-4 py-2"
-                      >
-                        {skill}
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                </div>
-
-                {/* Design & Visualization */}
-                <div>
-                  <motion.h3
-                    variants={fadeUp}
-                    className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3"
-                  >
-                    Design & Visualization
-                  </motion.h3>
-                  <motion.div
-                    variants={staggerContainer}
-                    className="flex flex-wrap gap-3"
-                  >
-                    {designSkills.map((skill) => (
-                      <motion.span
-                        key={skill}
-                        variants={scaleUp}
-                        whileHover={{ scale: 1.1 }}
-                        className="skill-tag text-base px-4 py-2"
-                      >
-                        {skill}
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-
-          {/* ─────────────────────────── */}
-          {/* RESUME DOWNLOAD */}
-          {/* ─────────────────────────── */}
-          <motion.section
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-            className="w-full"
-          >
-            <div className="glass-card p-8 lg:p-10 text-center">
-              <h2 className="section-title mb-4">Want to know more?</h2>
-              <p className="text-secondary-foreground mb-6 max-w-2xl mx-auto">
-                Download my resume for a detailed overview of my education,
-                experience, and skills.
-              </p>
+            {certifications.map((cert) => (
               <motion.a
-                href="/resume_v2.pdf"
-                download
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-primary inline-flex text-lg px-8 py-3"
+                key={cert.title}
+                data-cursor-label="View"
+                data-cursor-title={cert.title}
+                href={cert.url}
+                target="_blank"
+                rel="noreferrer"
+                whileHover={{ x: 8 }}
+                transition={{ duration: 0.3 }}
+                onMouseEnter={() => setActivePreview({ title: cert.title, label: "View" })}
+                onMouseLeave={() => setActivePreview(null)}
+                className={`group flex flex-col sm:flex-row sm:items-center justify-between py-6 sm:py-8 border-t transition-all duration-500 px-4 -mx-4 rounded-lg gap-2 ${
+                  isDark ? "border-[#27272A] hover:bg-[#1F1F23]" : "border-[#E3E3E3] hover:bg-white/60"
+                }`}
+                variants={slideUpChild}
               >
-                <Download className="w-5 h-5" />
-                Download Resume
+                <div className="flex items-center gap-4">
+                  <span className="font-sans font-bold text-lg sm:text-xl group-hover:text-[#455CE9] transition-colors">
+                    {cert.title}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 sm:gap-6">
+                  <span className={`font-mono text-xs ${isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/60"}`}>{cert.issuer}</span>
+                  <span className="font-mono text-xs text-[#455CE9] font-medium">{cert.date}</span>
+                  <ArrowUpRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:text-[#455CE9] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
+                </div>
               </motion.a>
+            ))}
+            <div className={`border-t ${isDark ? "border-[#27272A]" : "border-[#E3E3E3]"}`} />
+          </motion.div>
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* CONTACT — DENNIS SNELLENBERG FLAGSHIP FOOTER                  */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <CurveTransition fillColor={isDark ? "#0D0D0E" : "#1C1D20"} direction="down" />
+
+      <section
+        id="contact"
+        className={`relative py-28 sm:py-36 text-[#F3F1EC] transition-colors duration-400 overflow-hidden ${
+          isDark ? "bg-[#0D0D0E]" : "bg-[#1C1D20]"
+        }`}
+      >
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16 relative z-10 space-y-16">
+          
+          {/* Availability Status Telemetry Pill */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-8 font-mono text-xs text-[#AAA8A1]">
+            <div className="flex items-center gap-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+              <span className="text-white font-bold tracking-wider uppercase">AVAILABLE FOR NEW PROJECTS &amp; ROLES</span>
             </div>
-          </motion.section>
+            <span className="text-white/60">PUNJAB, INDIA — IST (UTC +5:30)</span>
+          </div>
 
-          {/* ─────────────────────────── */}
-          {/* CONTACT SECTION */}
-          {/* ─────────────────────────── */}
-          <motion.section
-            id="contact"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-            className="w-full"
-          >
-            <div className="glass-card p-8 lg:p-10">
-              <h2 className="section-title mb-4">Get in Touch</h2>
-              <p className="text-secondary-foreground mb-8 text-lg">
-                I'm open to internships, freelancing, and collaborations.
-              </p>
+          {/* Header & Oversized Headline */}
+          <div className="space-y-8 border-b border-[#383735] pb-16">
+            <div>
+              <span className="font-sans font-bold text-3xl sm:text-5xl uppercase tracking-tight text-[#F3F1EC]">
+                Let's work
+              </span>
+            </div>
 
-              <div className="flex flex-wrap items-center gap-4 mb-8">
-                <motion.a
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+              <h2 className="font-sans font-extrabold text-5xl sm:text-7xl lg:text-[7.5rem] uppercase tracking-tight text-[#F3F1EC] leading-none">
+                together
+              </h2>
+
+              {/* Floating Magnetic Blue Circle Button (Dennis Snellenberg Signature) */}
+              <Magnetic strength={0.4}>
+                <a
                   href="mailto:ghaikeshav55@gmail.com"
-                  className="btn-primary"
-                  whileHover={{ scale: 1.05, x: 5 }}
+                  className="w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-[#455CE9] text-white flex flex-col items-center justify-center font-mono text-sm font-bold uppercase tracking-wider shadow-[0_20px_60px_rgba(69,92,233,0.5)] hover:scale-110 transition-transform duration-300 border border-white/20 group cursor-pointer"
                 >
-                  <Mail className="w-4 h-4" />
-                  ghaikeshav55@gmail.com
-                </motion.a>
-                <motion.a
-                  href="tel:+917657805107"
-                  className="btn-ghost"
-                  whileHover={{ scale: 1.05, x: 5 }}
-                >
-                  <Phone className="w-4 h-4" />
-                  +91 76578 05107
-                </motion.a>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <motion.a
-                  href="https://github.com/keshav76315"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-ghost"
-                  whileHover={{
-                    scale: 1.1,
-                    rotate: 10,
-                    color: "var(--accent)",
-                  }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Github className="w-5 h-5" />
-                </motion.a>
-                <motion.a
-                  href="https://www.linkedin.com/in/keshav-ghai-b584b030a"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-ghost"
-                  whileHover={{ scale: 1.1, rotate: -10, color: "#0077b5" }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Linkedin className="w-5 h-5" />
-                </motion.a>
-              </div>
+                  <span className="group-hover:scale-110 transition-transform">Get in touch</span>
+                </a>
+              </Magnetic>
             </div>
-          </motion.section>
-        </main>
+          </div>
 
-        {/* Footer */}
-        <footer className="mt-20 text-center text-muted-foreground text-sm">
-          © {new Date().getFullYear()} Keshav Ghai
-        </footer>
-      </div>
+          {/* Direct Communication Grid */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 pt-4 font-mono text-xs text-[#AAA8A1]">
+            <div className="flex flex-wrap gap-4 items-center">
+              <Magnetic strength={0.25}>
+                <a
+                  href="/Resume.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-[#455CE9] text-white px-6 py-3.5 rounded-full border border-white/20 hover:bg-[#3449c9] transition-colors inline-flex items-center gap-2 font-bold shadow-lg"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span>Download Resume (PDF) ↗</span>
+                </a>
+              </Magnetic>
+
+              <Magnetic strength={0.25}>
+                <a
+                  href="mailto:ghaikeshav55@gmail.com"
+                  className="bg-[#262626] text-[#F3F1EC] px-6 py-3.5 rounded-full border border-white/10 hover:border-[#455CE9] transition-colors inline-block font-semibold"
+                >
+                  ghaikeshav55@gmail.com
+                </a>
+              </Magnetic>
+
+              <Magnetic strength={0.25}>
+                <a
+                  href="tel:+917657805107"
+                  className="bg-[#262626] text-[#F3F1EC] px-6 py-3.5 rounded-full border border-white/10 hover:border-[#455CE9] transition-colors inline-block font-semibold"
+                >
+                  +91 76578 05107
+                </a>
+              </Magnetic>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <a href="https://github.com/Keshav76315" target="_blank" rel="noreferrer" className="hover:text-white transition-colors font-bold">
+                GitHub ↗
+              </a>
+              <a href="https://linkedin.com/in/keshav-ghai" target="_blank" rel="noreferrer" className="hover:text-white transition-colors font-bold">
+                LinkedIn ↗
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* FOOTER                                                        */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <footer className={`border-t transition-colors duration-400 ${
+        isDark ? "bg-[#09090B] text-[#71717A] border-[#27272A]" : "bg-[#111111] text-[#5F5D58] border-[#383735]"
+      }`}>
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs">
+          <span>© {new Date().getFullYear()} Keshav Ghai</span>
+          <span className="text-[11px]">Designed &amp; Engineered in Punjab, India</span>
+        </div>
+      </footer>
+
+      {/* Floating Interactive HUD Controls */}
+      <HUDControls onOpenCLI={() => setCliOpen(true)} />
+
+      {/* Interactive System CLI Terminal Drawer */}
+      <SystemTerminalModal isOpen={cliOpen} onClose={() => setCliOpen(false)} />
     </div>
   );
 };
+
+// ─────────────────────────────────────
+// PROJECT ITEM SUB-COMPONENT
+// ─────────────────────────────────────
+
+const ProjectItem = ({
+  project,
+  idx,
+  isHovered,
+}: {
+  project: typeof primaryProjects[0];
+  idx: number;
+  isHovered: boolean;
+}) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
+  return (
+    <motion.article
+      ref={ref}
+      className={`group border-t py-12 sm:py-16 lg:py-20 cursor-none transition-colors duration-400 ${
+        isDark ? "border-[#27272A]" : "border-[#E3E3E3]"
+      }`}
+      onClick={() => setIsExpanded(!isExpanded)}
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+      transition={{ duration: 0.8, delay: idx * 0.1 }}
+    >
+      {/* Collapsed View: Title Row */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-8">
+        <div className="flex items-baseline gap-4 sm:gap-6">
+          <span className={`font-mono text-xs tabular-nums font-semibold ${isDark ? "text-white/40" : "text-[#1C1D20]/40"}`}>
+            {(project.index + 1).toString().padStart(2, "0")}
+          </span>
+          <h3 className={`font-sans font-bold text-3xl sm:text-5xl lg:text-6xl tracking-tight transition-colors duration-500 leading-[1.05] ${
+            isHovered ? "text-[#455CE9]" : isDark ? "text-[#F4F4F3]" : "text-[#1C1D20]"
+          }`}>
+            {project.title}
+          </h3>
+        </div>
+
+        <div className="flex items-center gap-6 lg:gap-8 pl-8 sm:pl-14 lg:pl-0">
+          <span className={`font-mono text-xs uppercase tracking-wider font-semibold ${isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/70"}`}>
+            {project.category}
+          </span>
+          <span className={`hidden sm:flex items-center gap-2 font-mono text-xs ${isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/70"}`}>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#455CE9]" />
+            {project.status}
+          </span>
+          <motion.div
+            animate={{ rotate: isExpanded ? 45 : 0 }}
+            transition={{ duration: 0.3 }}
+            className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 ml-auto lg:ml-0 shrink-0 ${
+              isHovered
+                ? "border-[#455CE9] bg-[#455CE9]"
+                : isDark
+                ? "border-[#27272A] bg-[#1F1F23]"
+                : "border-[#E3E3E3] bg-transparent"
+            }`}
+          >
+            <ArrowRight className={`w-4 h-4 transition-colors -rotate-45 ${isHovered ? "text-white" : isDark ? "text-[#F4F4F3]" : "text-[#1C1D20]"}`} />
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Expanded Details Drawer */}
+      <motion.div
+        initial={false}
+        animate={{
+          height: isExpanded ? "auto" : 0,
+          opacity: isExpanded ? 1 : 0,
+        }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="overflow-hidden"
+      >
+        <div className={`pt-8 sm:pt-10 pl-8 sm:pl-14 grid grid-cols-1 lg:grid-cols-12 gap-8 border-t mt-8 ${
+          isDark ? "border-[#27272A]" : "border-[#E3E3E3]"
+        }`}>
+          {/* Description & Status */}
+          <div className="lg:col-span-7 space-y-4">
+            <p className={`font-sans text-base sm:text-lg leading-relaxed ${
+              isDark ? "text-[#F4F4F3]" : "text-[#1C1D20]"
+            }`}>
+              {project.description}
+            </p>
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <span className="font-mono text-xs uppercase text-[#455CE9] font-bold tracking-wider">
+                Status: {project.status}
+              </span>
+              <span className={`font-mono text-xs ${isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/60"}`}>
+                • {project.category}
+              </span>
+            </div>
+          </div>
+
+          {/* Tech Stack & Repository Links */}
+          <div className="lg:col-span-5 space-y-6 flex flex-col justify-between">
+            <div className="space-y-2">
+              <span className={`font-mono text-[10px] uppercase font-bold tracking-wider block ${
+                isDark ? "text-[#A1A1AA]" : "text-[#1C1D20]/60"
+              }`}>
+                Architecture &amp; Tech Stack
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {project.techStack.map((tech) => (
+                  <span
+                    key={tech}
+                    className={`font-mono text-xs px-3 py-1 border rounded-sm ${
+                      isDark ? "bg-[#1F1F23] border-[#27272A] text-white" : "bg-white border-[#E3E3E3] text-[#1C1D20]"
+                    }`}
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {project.githubUrl && (
+              <div className="pt-2">
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#455CE9] text-white font-mono text-xs font-bold uppercase tracking-wider shadow-lg hover:bg-[#3449c9] transition-colors"
+                >
+                  <Github className="w-4 h-4" />
+                  <span>GitHub Repository ↗</span>
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </motion.article>
+  );
+};
+
 export default Index;
