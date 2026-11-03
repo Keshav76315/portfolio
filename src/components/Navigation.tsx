@@ -65,7 +65,7 @@ export const Navigation = () => {
               </a>
             ))}
             <a
-              href="/Resume.pdf"
+              href="/resume_f.pdf"
               target="_blank"
               rel="noreferrer"
               className="magnetic-btn font-sans text-sm text-[#111111] border border-[#111111] px-5 py-2 rounded-full"
@@ -118,7 +118,7 @@ export const Navigation = () => {
                 </motion.a>
               ))}
               <motion.a
-                href="/Resume.pdf"
+                href="/resume_f.pdf"
                 target="_blank"
                 rel="noreferrer"
                 className="font-mono text-sm text-[#2457FF] border border-[#2457FF] px-8 py-3 rounded-full mt-4"

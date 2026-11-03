@@ -32,8 +32,15 @@ export const SystemTerminalModal: React.FC<SystemTerminalModalProps> = ({ isOpen
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          onClose();
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,7 +71,7 @@ export const SystemTerminalModal: React.FC<SystemTerminalModalProps> = ({ isOpen
       case "about":
         outputNode = (
           <p className="text-xs text-[#F3F1EC] leading-relaxed py-1">
-            Keshav Ghai is a Software Engineer &amp; Creative Technologist. BS Data Science at IIT Madras, Arch Intern at Studio Eclecea. Specializes in Go proxies, local Ollama LLMs, and high-performance full-stack web applications.
+            Keshav Ghai is a Software Engineer &amp; Creative Technologist. BS Data Science at IIT Madras (former Architectural Intern at Studio Eclecea, Apr–Sep 2026). Actively seeking full-time software engineering and applied AI roles. Specializes in Go proxies, local Ollama LLMs, and high-performance full-stack web applications.
           </p>
         );
         break;
@@ -98,7 +105,7 @@ export const SystemTerminalModal: React.FC<SystemTerminalModalProps> = ({ isOpen
         );
         break;
       case "resume":
-        window.open("/Resume.pdf", "_blank");
+        window.open("/resume_f.pdf", "_blank");
         outputNode = <p className="text-xs text-emerald-400">Opening PDF Resume in new tab...</p>;
         break;
       case "clear":
@@ -121,13 +128,17 @@ export const SystemTerminalModal: React.FC<SystemTerminalModalProps> = ({ isOpen
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-[#111111]/80 backdrop-blur-md">
+        <div
+          onClick={onClose}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-[#111111]/80 backdrop-blur-md cursor-pointer"
+        >
           <motion.div
+            onClick={(e) => e.stopPropagation()}
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full max-w-3xl bg-[#111111] border border-[#383735] rounded-xl shadow-2xl overflow-hidden font-mono text-sm flex flex-col h-[520px]"
+            className="w-full max-w-3xl bg-[#111111] border border-[#383735] rounded-xl shadow-2xl overflow-hidden font-mono text-sm flex flex-col h-[520px] cursor-default"
           >
             {/* Window Header Bar */}
             <div className="bg-[#1C1B1A] px-4 py-3 border-b border-[#383735] flex items-center justify-between">

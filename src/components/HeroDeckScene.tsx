@@ -21,8 +21,22 @@ export const HeroDeckScene: React.FC = () => {
       {/* ═══════════════════════════════════════════════════════════════ */}
       {/* 1. TOP LOCATION GLOBE BADGE                                       */}
       {/* ═══════════════════════════════════════════════════════════════ */}
-      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16 w-full relative z-20 flex items-center justify-end">
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16 w-full relative z-20 flex items-center justify-between">
         
+        {/* Open To Work Telemetry Badge */}
+        <Magnetic strength={0.25}>
+          <a
+            href="#contact"
+            className="flex items-center gap-2.5 px-4 py-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all font-mono text-xs cursor-pointer shadow-md"
+            title="Actively looking for work — Get in touch"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.9)]" />
+            <span className="text-emerald-500 font-bold uppercase tracking-wider text-[11px]">
+              Open for Work
+            </span>
+          </a>
+        </Magnetic>
+
         {/* Floating Magnetic Location Globe Badge (Punjab, India) */}
         <Magnetic strength={0.35}>
           <div
@@ -50,7 +64,7 @@ export const HeroDeckScene: React.FC = () => {
         {/* 100% Full-Bleed Continuous Infinite Scroll Marquee */}
         <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none z-0 overflow-hidden">
           <motion.div style={{ x: marqueeX }} className="w-full overflow-hidden">
-            <div className="animate-marquee-infinite">
+            <div className="flex w-max animate-marquee-infinite">
               <h1
                 className={`font-sans font-extrabold text-[15vw] sm:text-[14vw] uppercase tracking-tighter leading-none whitespace-nowrap transition-colors duration-400 ${
                   isDark ? "text-[#F4F4F3]/90" : "text-[#1C1D20]/90"

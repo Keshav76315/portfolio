@@ -24,9 +24,7 @@ export const CyberneticGlobeCanvas: React.FC = () => {
 
     window.addEventListener("resize", handleResize);
 
-    // Mouse coordinates for tilt
-    let mouseX = 0;
-    let mouseY = 0;
+    // Tilt angles for smooth physics
     let targetRotationX = 0;
     let targetRotationY = 0;
     let rotationX = 0;
@@ -89,12 +87,12 @@ export const CyberneticGlobeCanvas: React.FC = () => {
         const p = points[i];
 
         // Rotate Y
-        let x1 = p.x * cosY - p.z * sinY;
-        let z1 = p.z * cosY + p.x * sinY;
+        const x1 = p.x * cosY - p.z * sinY;
+        const z1 = p.z * cosY + p.x * sinY;
 
         // Rotate X
-        let y2 = p.y * cosX - z1 * sinX;
-        let z2 = z1 * cosX + p.y * sinX;
+        const y2 = p.y * cosX - z1 * sinX;
+        const z2 = z1 * cosX + p.y * sinX;
 
         // Perspective scale factor
         const fov = 400;

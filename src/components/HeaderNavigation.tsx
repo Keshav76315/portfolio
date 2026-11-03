@@ -17,7 +17,7 @@ const navItems: NavItem[] = [
   { title: "Capabilities", href: "#capabilities" },
   { title: "About", href: "#about" },
   { title: "Contact", href: "#contact" },
-  { title: "Resume ↗", href: "/Resume.pdf", isExternal: true },
+  { title: "Resume ↗", href: "/resume_f.pdf", isExternal: true },
 ];
 
 export const HeaderNavigation: React.FC = () => {
@@ -76,7 +76,7 @@ export const HeaderNavigation: React.FC = () => {
           {/* Prominent Resume Button */}
           <Magnetic strength={0.35}>
             <a
-              href="/Resume.pdf"
+              href="/resume_f.pdf"
               target="_blank"
               rel="noreferrer"
               className={`px-4 py-2 rounded-full transition-colors duration-300 inline-flex items-center gap-1.5 font-bold shadow-lg ${
@@ -113,7 +113,7 @@ export const HeaderNavigation: React.FC = () => {
             {!isOpen && (
               <Magnetic strength={0.3}>
                 <a
-                  href="/Resume.pdf"
+                  href="/resume_f.pdf"
                   target="_blank"
                   rel="noreferrer"
                   className={`px-4 py-2.5 rounded-full font-mono text-xs font-bold uppercase tracking-wider shadow-xl transition-colors border hidden sm:inline-flex items-center gap-1.5 ${
@@ -195,7 +195,7 @@ export const HeaderNavigation: React.FC = () => {
                 // DIRECT COMMUNICATIONS &amp; RESUME
               </span>
               <div className="flex flex-wrap gap-4 items-center">
-                <a href="/Resume.pdf" target="_blank" rel="noreferrer" className="text-[#455CE9] hover:underline font-bold flex items-center gap-1">
+                <a href="/resume_f.pdf" target="_blank" rel="noreferrer" className="text-[#455CE9] hover:underline font-bold flex items-center gap-1">
                   <FileText className="w-3.5 h-3.5" />
                   <span>Download Resume (PDF) ↗</span>
                 </a>

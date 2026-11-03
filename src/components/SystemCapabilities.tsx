@@ -85,7 +85,7 @@ LAY_MEP_CONDUIT color=5 (blue)    thickness=0.25mm
 [EXECUTION STATUS]: Verified for Construction`,
     metrics: [
       { label: "DRAFTING ACCURACY", value: "Execution-Level CAD" },
-      { label: "PRACTICE", value: "Studio Eclecea Intern" },
+      { label: "EXPERIENCE", value: "Studio Eclecea (Apr–Sep 2026)" },
     ],
   },
 ];

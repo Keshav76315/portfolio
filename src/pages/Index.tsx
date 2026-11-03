@@ -1,11 +1,8 @@
-import { motion, useScroll, useTransform, useInView, useSpring, useMotionValue, useMotionValueEvent } from "framer-motion";
-import { useRef, useEffect, useState, useCallback } from "react";
-import { Mail, Phone, Github, Linkedin, ArrowRight, ArrowUpRight, ExternalLink, FileText } from "lucide-react";
-import Navigation from "@/components/Navigation";
+import { motion, useScroll, useInView, useSpring, Variants } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
+import { Github, ArrowRight, ArrowUpRight, FileText } from "lucide-react";
 import HeroDeckScene from "@/components/HeroDeckScene";
 import SystemCapabilities from "@/components/SystemCapabilities";
-import ScrambleText from "@/components/ScrambleText";
-import { FlipText, StaggerSlideText, PerspectiveSweepText, SplitWordKineticText } from "@/components/HeadingAnimations";
 import SystemTerminalModal from "@/components/SystemTerminalModal";
 import HUDControls from "@/components/HUDControls";
 import SectionSpineNavigation from "@/components/SectionSpineNavigation";
@@ -19,7 +16,7 @@ import { useTheme } from "@/context/ThemeContext";
 // ─────────────────────────────────────
 // ANIMATION VARIANTS
 // ─────────────────────────────────────
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
@@ -28,7 +25,7 @@ const containerVariants = {
   },
 };
 
-const slideUpChild = {
+const slideUpChild: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
@@ -37,7 +34,7 @@ const slideUpChild = {
   },
 };
 
-const slideUpStagger = {
+const slideUpStagger: Variants = {
   hidden: {},
   visible: {
     transition: { staggerChildren: 0.12 },
@@ -55,7 +52,8 @@ const primaryProjects = [
     status: "Prototype",
     techStack: ["React 18", "Electron", "TypeScript", "Tailwind CSS"],
     description: "Custom desktop HUD and productivity widget suite for tracking system performance and streamlining daily developer workflows.",
-    githubUrl: "https://github.com/Keshav76315",
+    githubUrl: "https://github.com/Keshav76315/guidons-eye",
+    image: "/projects/guidons_eye.png",
   },
   {
     index: 1,
@@ -64,7 +62,8 @@ const primaryProjects = [
     status: "Complete",
     techStack: ["Go (Golang)", "Gin", "ONNX Runtime", "Docker"],
     description: "Go-based reverse proxy and security agent featuring shell command parsing, ONNX anomaly detection model integration, and rate-limiting.",
-    githubUrl: "https://github.com/Keshav76315",
+    githubUrl: "https://github.com/Keshav76315/turboSH",
+    image: "/projects/turbosh.png",
   },
   {
     index: 2,
@@ -73,7 +72,8 @@ const primaryProjects = [
     status: "Complete",
     techStack: ["Ollama", "Python", "FastAPI", "React", "TypeScript"],
     description: "Legal query assistant utilizing local LLMs (via Ollama) to parse case documents and assist with legal research while keeping data private on-device.",
-    githubUrl: "https://github.com/Keshav76315",
+    githubUrl: "https://github.com/Keshav76315/LawBuddy",
+    image: "/projects/lawbuddy.png",
   },
   {
     index: 3,
@@ -82,7 +82,8 @@ const primaryProjects = [
     status: "Complete",
     techStack: ["Python", "Scikit-Learn", "FastAPI", "PostgreSQL"],
     description: "Machine learning recommendation system implementing collaborative and content-based filtering algorithms with FastAPI endpoint serving.",
-    githubUrl: "https://github.com/Keshav76315",
+    githubUrl: "https://github.com/Keshav76315/recommendation-engine",
+    image: "/projects/recommendation_engine.png",
   },
 ];
 
@@ -93,7 +94,8 @@ const secondaryProjects = [
     status: "Prototype",
     description: "Medication safety tool combining Tesseract.js OCR for prescription parsing and Gemini AI for dosage guidelines.",
     techStack: ["React 18", "TypeScript", "Gemini API", "Tesseract.js"],
-    liveUrl: "https://github.com/Keshav76315",
+    liveUrl: "https://med-safe-1.lovable.app",
+    githubUrl: "https://github.com/Keshav76315",
   },
   {
     title: "CodeChicks",
@@ -101,7 +103,8 @@ const secondaryProjects = [
     status: "Complete",
     description: "Full-stack community platform with real-time polling, productivity timers, and user authentication.",
     techStack: ["FastAPI", "Python", "MongoDB", "React"],
-    liveUrl: "https://github.com/Keshav76315",
+    liveUrl: "https://codechicks.vercel.app",
+    githubUrl: "https://github.com/Keshav76315",
   },
   {
     title: "TensorFlow Multi-Model Suite",
@@ -109,7 +112,7 @@ const secondaryProjects = [
     status: "Research",
     description: "Collection of deep learning models including CNN image classifiers, BiLSTM text sequences, and autoencoders.",
     techStack: ["TensorFlow 2.x", "Keras", "OpenCV", "Python"],
-    githubUrl: "https://github.com/Keshav76315",
+    githubUrl: "https://github.com/Keshav76315/ML-models",
   },
   {
     title: "Notes REST API",
@@ -117,16 +120,24 @@ const secondaryProjects = [
     status: "Complete",
     description: "RESTful backend API providing CRUD operations, request validation, and MongoDB data persistence.",
     techStack: ["Node.js", "Express.js", "MongoDB", "Mongoose"],
-    githubUrl: "https://github.com/Keshav76315",
+    githubUrl: "https://github.com/Keshav76315/notes-api",
   },
 ];
 
 const experiences = [
   {
+    role: "Software Engineer / Applied AI Builder",
+    company: "Open for Opportunities",
+    period: "Present",
+    isActive: true,
+    description: "Actively seeking full-time software engineering and AI systems roles. Available for immediate onboarding across high-throughput backends, machine learning pipelines, and full-stack applications.",
+    scope: ["Backend Systems", "Applied ML", "Full-Stack Web", "Available Immediately"],
+  },
+  {
     role: "Architectural Intern",
     company: "Studio Eclecea",
-    period: "Apr 2026 – Present",
-    isActive: true,
+    period: "Apr 2026 – Sep 2026",
+    isActive: false,
     description: "Execution-level architectural drafting for residential and interior design projects.",
     scope: ["Floor Plans", "Working Drawings", "MEP Layouts", "Site Inspections"],
   },
@@ -338,7 +349,7 @@ export const Index = () => {
 
               <Magnetic strength={0.4}>
                 <a
-                  href="/Resume.pdf"
+                  href="/resume_f.pdf"
                   target="_blank"
                   rel="noreferrer"
                   className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-[#455CE9] text-white font-mono text-xs font-bold uppercase tracking-wider flex flex-col items-center justify-center shadow-2xl hover:scale-105 transition-transform duration-300 border border-white/20 group cursor-pointer text-center p-2"
@@ -685,7 +696,7 @@ export const Index = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-8 font-mono text-xs text-[#AAA8A1]">
             <div className="flex items-center gap-3">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
-              <span className="text-white font-bold tracking-wider uppercase">AVAILABLE FOR NEW PROJECTS &amp; ROLES</span>
+              <span className="text-white font-bold tracking-wider uppercase">ACTIVELY SEEKING ROLES // AVAILABLE IMMEDIATELY</span>
             </div>
             <span className="text-white/60">PUNJAB, INDIA — IST (UTC +5:30)</span>
           </div>
@@ -720,7 +731,7 @@ export const Index = () => {
             <div className="flex flex-wrap gap-4 items-center">
               <Magnetic strength={0.25}>
                 <a
-                  href="/Resume.pdf"
+                  href="/resume_f.pdf"
                   target="_blank"
                   rel="noreferrer"
                   className="bg-[#455CE9] text-white px-6 py-3.5 rounded-full border border-white/20 hover:bg-[#3449c9] transition-colors inline-flex items-center gap-2 font-bold shadow-lg"
@@ -864,6 +875,18 @@ const ProjectItem = ({
         <div className={`pt-8 sm:pt-10 pl-8 sm:pl-14 grid grid-cols-1 lg:grid-cols-12 gap-8 border-t mt-8 ${
           isDark ? "border-[#27272A]" : "border-[#E3E3E3]"
         }`}>
+          {/* Project Screenshot Mockup if available */}
+          {project.image && (
+            <div className="lg:col-span-12 rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-black/20">
+              <img
+                src={project.image}
+                alt={`${project.title} Preview`}
+                className="w-full max-h-[460px] object-cover object-top hover:scale-[1.01] transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+          )}
+
           {/* Description & Status */}
           <div className="lg:col-span-7 space-y-4">
             <p className={`font-sans text-base sm:text-lg leading-relaxed ${
